@@ -65,7 +65,7 @@ public class StudentModel {
                 + register_list.get(1) + ","
                 + register_list.get(2);
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("data/student.txt", true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true));
             writer.newLine();
             writer.write(text);
             writer.close();
