@@ -1,4 +1,3 @@
 *username,password,superuser_id
-vahidi,ostadvhd ,1
 amir,amir1234,2
 ali,alireza12,3

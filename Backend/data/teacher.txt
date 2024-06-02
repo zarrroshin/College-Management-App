@@ -1,1 +1,2 @@
-*username,teacher_id,password,is_admin
+*username,password,teacher_id
+vahidi,ostadvhd,1
