@@ -47,7 +47,6 @@ public class RegisterController {
             return false;
         }
 
-
     }
 
     public boolean handleLogin() {
@@ -61,8 +60,5 @@ public class RegisterController {
         }
 
         return false;
-
     }
-
-
 }
