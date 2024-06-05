@@ -68,7 +68,7 @@ class SignupPage extends StatelessWidget {
                 SizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                    labelText: 'CodeId',
+                    labelText: 'Code Id',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
@@ -82,6 +82,19 @@ class SignupPage extends StatelessWidget {
                 TextField(
                   decoration: InputDecoration(
                     labelText: 'Password',
+                    filled: true,
+                    fillColor: Colors.grey[200], // Background color
+                    border: OutlineInputBorder( // Border
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
+                  ),
+                  obscureText: true,
+                ),SizedBox(height: 20),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Repeat Password',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
