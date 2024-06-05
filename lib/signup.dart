@@ -1,4 +1,4 @@
-import 'package:appppp/login.dart';
+import 'login.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatelessWidget {
