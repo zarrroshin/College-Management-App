@@ -2,6 +2,10 @@ import 'login.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatelessWidget {
+  TextEditingController username = TextEditingController();
+  TextEditingController student_id = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController password2 = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +39,7 @@ class SignupPage extends StatelessWidget {
                 SizedBox(height: 20),
                 Center(
                   child: Text(
-                    'Join Our University',
+                    'به دانشگاه شهید بهشتی خوش آمدید',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
@@ -44,18 +48,20 @@ class SignupPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
-                  'Create an Account to Get Started',
+                  'حساب کاربری خود را ایجاد کنید',
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 40),
-                TextField(
+                SizedBox(height: 30),
+                TextFormField(
+                  controller: username,
                   decoration: InputDecoration(
-                    labelText: 'Username',
+                    labelText: 'نام کاربری',
+                    hintText:'نام کاربری خود را وارد کنید' ,
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
@@ -65,10 +71,13 @@ class SignupPage extends StatelessWidget {
                     prefixIcon: Icon(Icons.person, color: Colors.grey), // Icon
                   ),
                 ),
-                SizedBox(height: 20),
-                TextField(
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: student_id,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'Code Id',
+                    labelText: 'شماره دانشجویی',
+                    hintText: 'شماره دانشجویی خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
@@ -78,10 +87,12 @@ class SignupPage extends StatelessWidget {
                     prefixIcon: Icon(Icons.email, color: Colors.grey), // Icon
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 TextField(
+                  controller: password,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'رمز عبور',
+                    hintText: 'رمز عبور خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
@@ -91,10 +102,12 @@ class SignupPage extends StatelessWidget {
                     prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
                   ),
                   obscureText: true,
-                ),SizedBox(height: 20),
+                ),SizedBox(height: 10),
                 TextField(
+                  controller: password2,
                   decoration: InputDecoration(
-                    labelText: 'Repeat Password',
+                    labelText: 'تکرار رمز عبور',
+                    hintText: 'رمز عبور خود را دوباره وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
@@ -117,17 +130,16 @@ class SignupPage extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
-                      'Sign Up',
+                      'ثبت نام',
                       style: TextStyle(fontSize: 18,color: Colors.white),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Already have an account? Login', style: TextStyle(color: Colors.black)),
+                  child: Text('حساب کاربری دارید؟ وارد شوید', style: TextStyle(color: Colors.black)),
                 ),
               ],
             ),
