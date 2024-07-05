@@ -5,6 +5,8 @@ import 'profile.dart';
 class LoginPage extends StatelessWidget {
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,11 +59,10 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 40),
                 TextFormField(
-                  keyboardType: TextInputType.number,
                   controller: student_id,
                   decoration: InputDecoration(
-                    labelText: ' شماره دانشجویی ',
-                    hintText: 'شماره دانشجویی خود را وارد کنید',
+                    labelText: ' شماره دانشجویی / نام کاربری',
+                    hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
@@ -73,6 +74,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 TextFormField(
+                  obscureText: true,
                   controller: password,
                   decoration: InputDecoration(
                     labelText: 'رمز عبور',
@@ -85,7 +87,6 @@ class LoginPage extends StatelessWidget {
                     ),
                     prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
                   ),
-                  obscureText: true,
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.indigo)),
