@@ -18,7 +18,7 @@ class SignupPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 80),
+                SizedBox(height: 50),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16.0),
