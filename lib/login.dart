@@ -49,7 +49,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'وارد اکانت خود شوید',
+                  'وارد حساب کاربری خود شوید',
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black,
@@ -114,7 +114,7 @@ class LoginPage extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );
                   },
-                  child: Text('اکانت ندارید؟ ثبت نام کنید', style: TextStyle(color: Colors.black)),
+                  child: Text('حساب کاربری ندارید؟ ثبت نام کنید', style: TextStyle(color: Colors.black)),
                 ),
               ],
             ),
