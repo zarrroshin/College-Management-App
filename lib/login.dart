@@ -3,6 +3,10 @@ import 'signup.dart';
 import 'profile.dart';
 
 class LoginPage extends StatelessWidget {
+  TextEditingController student_id = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +40,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 20),
                 Center(
                   child: Text(
-                    'Welcome Back!',
+                    'خوش آمدید',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
@@ -47,16 +51,18 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'Login to your account',
+                  'وارد حساب کاربری خود شوید',
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black,
                   ),
                 ),
                 SizedBox(height: 40),
-                TextField(
+                TextFormField(
+                  controller: student_id,
                   decoration: InputDecoration(
-                    labelText: 'Username',
+                    labelText: ' شماره دانشجویی / نام کاربری',
+                    hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
@@ -67,9 +73,12 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                TextField(
+                TextFormField(
+                  obscureText: true,
+                  controller: password,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'رمز عبور',
+                    hintText: 'رمز عبور خود را وارد نمایید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
@@ -78,7 +87,6 @@ class LoginPage extends StatelessWidget {
                     ),
                     prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
                   ),
-                  obscureText: true,
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.indigo)),
@@ -94,7 +102,7 @@ class LoginPage extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
-                      'Login',
+                      'ورود',
                       style: TextStyle(fontSize: 18,color: Colors.white),
                     ),
                   ),
@@ -107,7 +115,7 @@ class LoginPage extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );
                   },
-                  child: Text('Don\'t have an account? Sign Up', style: TextStyle(color: Colors.black)),
+                  child: Text('حساب کاربری ندارید؟ ثبت نام کنید', style: TextStyle(color: Colors.black)),
                 ),
               ],
             ),
