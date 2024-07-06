@@ -1,6 +1,7 @@
 import 'dart:io';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'signup.dart';
 import 'profile.dart';
 
@@ -11,14 +12,16 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController student_id = TextEditingController();
-
   TextEditingController password = TextEditingController();
   String response = '';
+  bool userIdchecker = true, passwordChecker = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.indigo,),
+      appBar: AppBar(
+        backgroundColor: Colors.indigo,
+      ),
       body: Container(
         color: Colors.white,
         child: Center(
@@ -40,11 +43,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                    child: Image.asset(
-                      'assets/university_logo.jpg',
-                      height: 200,
-                    ),
+                  child: Image.asset(
+                    'assets/university_logo.jpg',
+                    height: 200,
                   ),
+                ),
                 SizedBox(height: 20),
                 Center(
                   child: Text(
@@ -73,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
+                    border: OutlineInputBorder(
+                      // Border
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
@@ -89,7 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'رمز عبور خود را وارد نمایید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
+                    border: OutlineInputBorder(
+                      // Border
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
@@ -97,22 +102,45 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 30),
-                ElevatedButton(style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.indigo)),
-                  onPressed: () {
-                    checklogin();
-                    bool isLoggedIn = true;
-                    if (isLoggedIn) {
+                InkWell(
+                  onTap: () async {
+                    await checklogin();
+                    if (response == "200") {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => ProfilePage()),
                       );
+                    } else if (response == "401") {
+                      Fluttertoast.showToast(
+                        msg: "رمز عبور اشتباه است",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    } else if (response == "404") {
+                      Fluttertoast.showToast(
+                        msg: "نام کاربری در سامانه یافت نشد",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
                     }
                   },
-                  child: Padding(
+                  child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                    child: Text(
-                      'ورود',
-                      style: TextStyle(fontSize: 18,color: Colors.white),
+                    decoration: BoxDecoration(
+                      color: Colors.indigo,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'ورود',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
                     ),
                   ),
                 ),
@@ -124,7 +152,8 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );
                   },
-                  child: Text('حساب کاربری ندارید؟ ثبت نام کنید', style: TextStyle(color: Colors.black)),
+                  child: Text('حساب کاربری ندارید؟ ثبت نام کنید',
+                      style: TextStyle(color: Colors.black)),
                 ),
               ],
             ),
@@ -133,20 +162,30 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  Future<String> checklogin() async{
+
+  Future<void> checklogin() async {
+    Completer<String> completer = Completer();
     await Socket.connect("10.0.0.4", 8080).then((serverSocket) {
-          serverSocket.write("GET: loginChecker~${student_id.text}~${password.text}\\u0000");
-          serverSocket.flush();
-          serverSocket.listen((socketresponse){
-            setState((){
-              response=String.fromCharCode(socketresponse as int);
-            });
-          });
-        });
-            print("------ server response is:{$response}");
-            return response;
-
-
-
+      serverSocket.write(
+          'GET: loginChecker~${student_id.text}~${password.text}\u0000');
+      serverSocket.flush();
+      serverSocket.listen((socketresponse) {
+        response = String.fromCharCodes(socketresponse);
+        completer.complete(response);
+      });
+    });
+    await completer.future;
+    setState(() {
+      if (response == "401") {
+        userIdchecker = true;
+        passwordChecker = false;
+      } else if (response == "404") {
+        userIdchecker = false;
+        passwordChecker = false;
+      } else if (response == "200") {
+        userIdchecker = true;
+        passwordChecker = true;
+      }
+    });
   }
 }
