@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext con text) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
@@ -66,7 +66,10 @@ class ProfilePage extends StatelessWidget {
               onPressed: () {
                 // Add functionality to delete profile here
               },
-              child: Text('Delete Profile',style: TextStyle(color: Colors.white),),
+              child: Text(
+                'Delete Profile',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
