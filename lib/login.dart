@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'signup.dart';
 import 'profile.dart';
 
@@ -110,24 +108,6 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         MaterialPageRoute(builder: (context) => ProfilePage()),
                       );
-                    } else if (response == "401") {
-                      Fluttertoast.showToast(
-                        msg: "رمز عبور اشتباه است",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
-                    } else if (response == "404") {
-                      Fluttertoast.showToast(
-                        msg: "نام کاربری در سامانه یافت نشد",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
                     }
                   },
                   child: Container(
@@ -164,28 +144,25 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> checklogin() async {
-    Completer<String> completer = Completer();
-    await Socket.connect("10.0.0.4", 8080).then((serverSocket) {
+    await Socket.connect("192.168.142.1", 9090).then((serverSocket) {
       serverSocket.write(
           'GET: loginChecker~${student_id.text}~${password.text}\u0000');
       serverSocket.flush();
       serverSocket.listen((socketresponse) {
-        response = String.fromCharCodes(socketresponse);
-        completer.complete(response);
+        setState(() {
+          response = String.fromCharCodes(socketresponse);
+          if (response == "401") {
+            userIdchecker = true;
+            passwordChecker = false;
+          } else if (response == "404") {
+            userIdchecker = false;
+            passwordChecker = false;
+          } else if (response == "200") {
+            userIdchecker = true;
+            passwordChecker = true;
+          }
+        });
       });
-    });
-    await completer.future;
-    setState(() {
-      if (response == "401") {
-        userIdchecker = true;
-        passwordChecker = false;
-      } else if (response == "404") {
-        userIdchecker = false;
-        passwordChecker = false;
-      } else if (response == "200") {
-        userIdchecker = true;
-        passwordChecker = true;
-      }
     });
   }
 }

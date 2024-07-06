@@ -1,3 +1,5 @@
+package Server;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -7,7 +9,7 @@ import java.net.Socket;
 public class Server {
     public static void main(String[] args) throws IOException {
         System.out.println("Welcome to the server!");
-        ServerSocket serverSocket = new ServerSocket(8080);
+        ServerSocket serverSocket = new ServerSocket(9090); // Changed port number to 9090
         while (true) {
             System.out.println("Waiting for client");
             new ClientHandler(serverSocket.accept()).start();
@@ -107,7 +109,7 @@ class ClientHandler extends Thread {
                 }
             }
 
-                break;
+            break;
 
             default:
                 break;
