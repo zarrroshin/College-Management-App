@@ -1,14 +1,16 @@
-package main.java.Controller;
+package Controller;
 
-import main.java.Model.*;
-import main.java.View.*;
+import Model.StudentModel;
+import View.RegisterView;
+
+import java.util.Scanner;
 
 public class MainController {
     private StudentModel studentModel;
     private RegisterController registerController;
 
     public MainController() {
-        StudentModel studentModel = new StudentModel();
+        studentModel = new StudentModel(); // Fixed: Initialize the instance variable instead of creating a new local variable
         RegisterView registerView = new RegisterView();
 
         registerController = new RegisterController(studentModel, registerView);
@@ -20,14 +22,14 @@ public class MainController {
             int choice = displayMainMenu();
             switch (choice) {
                 case 1:
-                    boolean check_register = registerController.handleRegistration();
-                    if (check_register) {
+                    boolean checkRegister = registerController.handleRegistration();
+                    if (checkRegister) {
                         exit = true;
                     }
                     break;
                 case 2:
-                    boolean check_login = registerController.handleLogin();
-                    if (check_login) {
+                    boolean checkLogin = registerController.handleLogin();
+                    if (checkLogin) {
                         exit = true;
                     }
                     break;
@@ -49,8 +51,6 @@ public class MainController {
         System.out.println("3. Manage Student");
         System.out.println("4. Exit");
         System.out.print("Enter your choice: ");
-        return new java.util.Scanner(System.in).nextInt();
+        return new Scanner(System.in).nextInt(); // Fixed: Create Scanner instance directly
     }
-
-
 }

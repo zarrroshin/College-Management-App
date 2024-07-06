@@ -1,4 +1,4 @@
-package main.java.Model;
+package Model;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -6,7 +6,8 @@ import java.util.List;
 
 public class StudentModel {
     private static final String FILE_PATH = "data/student.txt";
-    private static List<String[]> students;
+    private List<String[]> students;
+
 
     public StudentModel() {
         students = new ArrayList<String[]>();
@@ -17,8 +18,7 @@ public class StudentModel {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.trim().indexOf('*') == 0)
-                    continue;
+                if (line.trim().indexOf('*') == 0) continue;
                 String[] student_detail = line.split(",");
                 if (student_detail.length >= 3)
                     students.add(student_detail);
@@ -30,8 +30,7 @@ public class StudentModel {
     }
 
     public Boolean CheckUnique(List<String> register_list) {
-        // register list --- > username(0) codeID(1) ---> () means index length of list
-        // is 2
+        // register list --- > username(0) codeID(1)  ---> () means index  length of list is 2
         String username = register_list.get(0);
         String codeID = register_list.get(1);
 
@@ -44,22 +43,20 @@ public class StudentModel {
 
     }
 
-    public static int Login(String username_or_codeID, String password) {
-        int result = 0;
+    public Boolean Login(List<String> login_list) {
+        String username_or_codeID = login_list.get(0);
+        String password = login_list.get(1);
+
         for (String[] student : students) {
             if ((student[0].equalsIgnoreCase(username_or_codeID)
-                    || student[1].equalsIgnoreCase(username_or_codeID))) {
-                result = 1;
-                if (student[2].equalsIgnoreCase(password)) {
-                    result = 2;
-                    return result;
-                }
-
+                    || student[1].equalsIgnoreCase(username_or_codeID))
+                    &&
+                    student[2].equalsIgnoreCase(password)) {
+                return true;
             }
 
         }
-        return result;
-
+        return false;
     }
 
     public Boolean AddStudentToDataBase(List<String> register_list) {
