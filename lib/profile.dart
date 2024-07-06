@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
-  Widget build(BuildContext con text) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,

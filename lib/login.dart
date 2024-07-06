@@ -1,6 +1,8 @@
+import 'dart:convert'; // Import for JSON encoding/decoding
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'signup.dart';
 import 'profile.dart';
 
@@ -11,14 +13,16 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController student_id = TextEditingController();
-
   TextEditingController password = TextEditingController();
   String response = '';
+  String serverAddress = "127.0.0.1"; // Default to localhost
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.indigo,),
+      appBar: AppBar(
+        backgroundColor: Colors.indigo,
+      ),
       body: Container(
         color: Colors.white,
         child: Center(
@@ -40,11 +44,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                    child: Image.asset(
-                      'assets/university_logo.jpg',
-                      height: 200,
-                    ),
+                  child: Image.asset(
+                    'assets/university_logo.jpg',
+                    height: 200,
                   ),
+                ),
                 SizedBox(height: 20),
                 Center(
                   child: Text(
@@ -73,7 +77,8 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
+                    border: OutlineInputBorder(
+                      // Border
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
@@ -89,7 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'رمز عبور خود را وارد نمایید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
+                    border: OutlineInputBorder(
+                      // Border
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
@@ -97,22 +103,19 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 30),
-                ElevatedButton(style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.indigo)),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.indigo),
+                  ),
                   onPressed: () {
                     checklogin();
-                    bool isLoggedIn = true;
-                    if (isLoggedIn) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
-                      );
-                    }
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ورود',
-                      style: TextStyle(fontSize: 18,color: Colors.white),
+                      style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
                 ),
@@ -124,7 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );
                   },
-                  child: Text('حساب کاربری ندارید؟ ثبت نام کنید', style: TextStyle(color: Colors.black)),
+                  child: Text(
+                    'حساب کاربری ندارید؟ ثبت نام کنید',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ],
             ),
@@ -133,20 +139,66 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  Future<String> checklogin() async{
-    await Socket.connect("10.0.0.4", 8080).then((serverSocket) {
-          serverSocket.write("GET: loginChecker~${student_id.text}~${password.text}\\u0000");
-          serverSocket.flush();
-          serverSocket.listen((socketresponse){
-            setState((){
-              response=String.fromCharCode(socketresponse as int);
-            });
-          });
+
+  Future<void> checklogin() async {
+    try {
+      final socket = await Socket.connect(serverAddress, 8080);
+
+      var postRequest = jsonEncode({
+        'command': 'POST',
+        'studentId': student_id.text,
+        'password': password.text,
+      });
+
+      socket.write('$postRequest\n');
+      await socket.flush();
+
+      socket.listen((List<int> event) {
+        setState(() {
+          response = utf8.decode(event);
         });
-            print("------ server response is:{$response}");
-            return response;
 
+        // Check the server response and show a toast notification
+        if (response.contains('success')) {
+          Fluttertoast.showToast(
+            msg: "Login Successful!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
 
+          // Navigate to the profile page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ProfilePage()),
+          );
+        } else {
+          Fluttertoast.showToast(
+            msg: "Login Failed! Please check your credentials.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+      });
 
+      socket.close();
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Error: $e",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 }
