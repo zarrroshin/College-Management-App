@@ -1,3 +1,7 @@
+package Server;
+
+import Model.StudentModel;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -54,7 +54,7 @@ public class RegisterController {
         String password = login_detail.get(0);
         String username_or_codeID = login_detail.get(1);
 
-        if (model.Login(login_detail)) {
+        if (model.Login(username_or_codeID,password) == 2) {
             System.out.println("Successful login Welcome <3 :)");
             return true;
         }
