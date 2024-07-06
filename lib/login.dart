@@ -1,11 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import 'profile.dart';
 
-class LoginPage extends StatelessWidget {
-  TextEditingController student_id = TextEditingController();
-  TextEditingController password = TextEditingController();
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController student_id = TextEditingController();
+
+  TextEditingController password = TextEditingController();
+  String response = '';
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +99,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 30),
                 ElevatedButton(style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.indigo)),
                   onPressed: () {
+                    checklogin();
                     bool isLoggedIn = true;
                     if (isLoggedIn) {
                       Navigator.pushReplacement(
@@ -123,5 +132,21 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+  Future<String> checklogin() async{
+    await Socket.connect("10.0.0.4", 8080).then((serverSocket) {
+          serverSocket.write("GET: loginChecker~${student_id.text}~${password.text}\\u0000");
+          serverSocket.flush();
+          serverSocket.listen((socketresponse){
+            setState((){
+              response=String.fromCharCode(socketresponse as int);
+            });
+          });
+        });
+            print("------ server response is:{$response}");
+            return response;
+
+
+
   }
 }
