@@ -1,7 +1,8 @@
-package Controller;
+package main.java.Controller;
 
-import Model.StudentModel;
-import View.RegisterView;
+import main.java.Model.StudentModel;
+import main.java.View.RegisterView;
+
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -54,7 +55,7 @@ public class RegisterController {
         String password = login_detail.get(0);
         String username_or_codeID = login_detail.get(1);
 
-        if (model.Login(login_detail)) {
+        if (model.Login(username_or_codeID, password)) {
             System.out.println("Successful login Welcome <3 :)");
             return true;
         }

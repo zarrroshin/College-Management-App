@@ -1,4 +1,4 @@
-package Model;
+package main.java.Model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

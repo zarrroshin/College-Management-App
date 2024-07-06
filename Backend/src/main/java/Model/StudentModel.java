@@ -1,8 +1,7 @@
-package Model;
+package main.java.Model;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class StudentModel {

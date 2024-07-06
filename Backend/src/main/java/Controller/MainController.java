@@ -1,7 +1,7 @@
-package Controller;
+package main.java.Controller;
 
-import Model.*;
-import View.*;
+import main.java.Model.*;
+import main.java.View.*;
 
 public class MainController {
     private StudentModel studentModel;
