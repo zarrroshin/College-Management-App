@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import 'profile.dart';
@@ -144,25 +145,29 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> checklogin() async {
-    await Socket.connect("192.168.142.1", 9090).then((serverSocket) {
+    Completer<String> completer = Completer();
+    await Socket.connect("192.168.142.1", 8080).then((serverSocket) {
+      print("hi");
       serverSocket.write(
           'GET: loginChecker~${student_id.text}~${password.text}\u0000');
       serverSocket.flush();
       serverSocket.listen((socketresponse) {
-        setState(() {
-          response = String.fromCharCodes(socketresponse);
-          if (response == "401") {
-            userIdchecker = true;
-            passwordChecker = false;
-          } else if (response == "404") {
-            userIdchecker = false;
-            passwordChecker = false;
-          } else if (response == "200") {
-            userIdchecker = true;
-            passwordChecker = true;
-          }
-        });
+        response = String.fromCharCodes(socketresponse);
+        completer.complete(response);
       });
+    });
+    await completer.future;
+    setState(() {
+      if (response == "401") {
+        userIdchecker = true;
+        passwordChecker = false;
+      } else if (response == "404") {
+        userIdchecker = false;
+        passwordChecker = false;
+      } else if (response == "200") {
+        userIdchecker = true;
+        passwordChecker = true;
+      }
     });
   }
 }
