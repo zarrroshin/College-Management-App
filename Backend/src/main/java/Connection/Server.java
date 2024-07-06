@@ -1,4 +1,4 @@
-package Connection;
+package main.java.Connection;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

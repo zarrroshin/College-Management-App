@@ -70,36 +70,42 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 40),
-                TextFormField(
-                  controller: student_id,
-                  decoration: InputDecoration(
-                    labelText: ' شماره دانشجویی / نام کاربری',
-                    hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
-                    filled: true,
-                    fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder(
-                      // Border
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextFormField(
+                    controller: student_id,
+                    decoration: InputDecoration(
+                      labelText: ' شماره دانشجویی / نام کاربری',
+                      hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
+                      filled: true,
+                      fillColor: Colors.grey[200], // Background color
+                      border: OutlineInputBorder(
+                        // Border
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.email, color: Colors.grey), // Icon
                     ),
-                    prefixIcon: Icon(Icons.email, color: Colors.grey), // Icon
                   ),
                 ),
                 SizedBox(height: 20),
-                TextFormField(
-                  obscureText: true,
-                  controller: password,
-                  decoration: InputDecoration(
-                    labelText: 'رمز عبور',
-                    hintText: 'رمز عبور خود را وارد نمایید',
-                    filled: true,
-                    fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder(
-                      // Border
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: password,
+                    decoration: InputDecoration(
+                      labelText: 'رمز عبور',
+                      hintText: 'رمز عبور خود را وارد نمایید',
+                      filled: true,
+                      fillColor: Colors.grey[200], // Background color
+                      border: OutlineInputBorder(
+                        // Border
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
                     ),
-                    prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
                   ),
                 ),
                 SizedBox(height: 30),
