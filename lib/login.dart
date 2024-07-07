@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'signup.dart';
-import 'profile.dart';
+import 'home.dart';
+import 'signup.dart';// Import the Home page file
 
 class LoginPage extends StatelessWidget {
   TextEditingController student_id = TextEditingController();
@@ -99,11 +99,13 @@ class LoginPage extends StatelessWidget {
                     backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
                   onPressed: () {
+                    // Simulate successful login for demonstration
                     bool isLoggedIn = true;
+
                     if (isLoggedIn) {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => ProfilePage()),
+                        MaterialPageRoute(builder: (context) => HomePage()), // Navigate to HomePage instead of ProfilePage
                       );
                     }
                   },
