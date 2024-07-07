@@ -64,7 +64,7 @@ class SignupPage extends StatelessWidget {
                   controller: username,
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'نام کاربری',
+                    labelText: 'نام کاربری                                                  ',
                     hintText: 'نام کاربری خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
@@ -81,7 +81,7 @@ class SignupPage extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'شماره دانشجویی',
+                    labelText: 'شماره دانشجویی                                              ',
                     hintText: 'شماره دانشجویی خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
@@ -97,7 +97,7 @@ class SignupPage extends StatelessWidget {
                   controller: password,
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'رمز عبور',
+                    labelText: 'رمز عبور                                                 ',
                     hintText: 'رمز عبور خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
@@ -114,7 +114,7 @@ class SignupPage extends StatelessWidget {
                   controller: password2,
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'تکرار رمز عبور',
+                    labelText: 'تکرار رمز عبور                                          ',
                     hintText: 'رمز عبور خود را دوباره وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
