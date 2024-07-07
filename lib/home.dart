@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/profile'); // Navigate to ProfilePage
               },
-              child: Text('View Profile'),
+              child: Text('مشاهده صفحه کاربری'), // View Profile
             ),
             SizedBox(height: 10),
             ElevatedButton(
@@ -40,6 +40,13 @@ class HomePage extends StatelessWidget {
                 Navigator.pushNamed(context, '/news'); // Navigate to NewsPage
               },
               child: Text('صفحه خبرا'), // News Page
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/exercise'); // Navigate to ExercisePage
+              },
+              child: Text('صفحه تمرینا'), // Exercise Page
             ),
           ],
         ),

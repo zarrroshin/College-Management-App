@@ -4,7 +4,8 @@ import 'signup.dart';
 import 'home.dart';
 import 'profile.dart';
 import 'work_page.dart';
-import 'news_page.dart'; // Import the NewsPage file
+import 'news_page.dart';
+import 'exercise_page.dart'; // Import the ExercisePage file
 
 void main() {
   runApp(MyApp());
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/profile': (context) => ProfilePage(),
         '/work': (context) => WorkPage(),
-        '/news': (context) => NewsPage(), // Add route for NewsPage
+        '/news': (context) => NewsPage(),
+        '/exercise': (context) => ExercisePage(), // Add route for ExercisePage
       },
     );
   }
