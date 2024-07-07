@@ -9,7 +9,7 @@ class SignupPage extends StatelessWidget {
   TextEditingController password = TextEditingController();
   TextEditingController password2 = TextEditingController();
   String response = "";
-  String serverAddress = "172.21.192.1";
+  String serverAddress = "10.0.0.4";
 
   @override
   Widget build(BuildContext context) {

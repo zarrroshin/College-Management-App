@@ -6,7 +6,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'signup.dart';
-import 'profile.dart';
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
   String response = '';
-  String serverAddress = "172.21.192.1"; // Default to localhost
+  String serverAddress = "10.0.0.4"; // Default to localhost
 
   @override
   Widget build(BuildContext context) {
