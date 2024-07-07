@@ -10,6 +10,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title:Align(alignment: Alignment.bottomRight,child:Text('صفحه اصلی ',style: TextStyle(color: Colors.white,fontSize: 23,fontWeight: FontWeight.bold, fontFamily: 'Roboto'))) ,
         backgroundColor: Colors.indigo,
       ),
       body: Padding(
@@ -19,7 +20,7 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Navigation Buttons
-              buildButton(context, 'مشاهده صفحه کاربری', '/profile'),
+              buildButton(context, 'صفحه کاربری', '/profile'),
               SizedBox(height: 10),
               buildButton(context, 'صفحه کارها', '/work'),
               SizedBox(height: 10),
