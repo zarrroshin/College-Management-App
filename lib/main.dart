@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'signup.dart';
+import 'home.dart'; // Import the HomePage file
 
 void main() {
   runApp(MyApp());
@@ -14,11 +15,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      initialRoute: '/login', // Set initial route to LoginPage
       routes: {
         '/login': (context) => LoginPage(),
         '/signup': (context) => SignupPage(),
-
+        '/home': (context) => HomePage(), // Add route for HomePage
       },
     );
   }
