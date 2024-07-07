@@ -1,62 +1,125 @@
 import 'package:flutter/material.dart';
+import 'profile.dart';
+import 'work_page.dart';
+import 'news_page.dart';
+import 'exercise_page.dart';
+import 'classes_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
         backgroundColor: Colors.indigo,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome to University App!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.indigo,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Navigation Buttons
+              buildButton(context, 'مشاهده صفحه کاربری', '/profile'),
+              SizedBox(height: 10),
+              buildButton(context, 'صفحه کارها', '/work'),
+              SizedBox(height: 10),
+              buildButton(context, 'صفحه خبرها', '/news'),
+              SizedBox(height: 10),
+              buildButton(context, 'صفحه تمرینات', '/exercise'),
+              SizedBox(height: 10),
+              buildButton(context, 'صفحه کلاس‌ها', '/classes'),
+              SizedBox(height: 20),
+
+              // Important Announcements
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Align(alignment:Alignment.bottomRight,child: Text(
+                      'آخرین دستاوردهای دانشگاه',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.indigo,
+                      ),
+                    ) ,),
+
+                      SizedBox(height: 10),
+                  Align(alignment:Alignment.bottomRight,child:Text(
+                        ' NEWBIES  برگزاری مسابقه برنامه‌نویسی ',
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.right,
+                      ),),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/profile'); // Navigate to ProfilePage
-              },
-              child: Text('مشاهده صفحه کاربری'), // View Profile
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/work'); // Navigate to WorkPage
-              },
-              child: Text('صفحه کارا'), // Work Page
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/news'); // Navigate to NewsPage
-              },
-              child: Text('صفحه خبرا'), // News Page
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/exercise'); // Navigate to ExercisePage
-              },
-              child: Text('صفحه تمرینا'), // Exercise Page
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/classes'); // Navigate to ClassesPage
-              },
-              child: Text('صفحه کلاسا'), // Classes Page
-            ),
-          ],
+              SizedBox(height: 20),
+
+              // Help and Support
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Align(alignment:Alignment.bottomRight,child:Text(
+                        'ارتباط با پشتیبانی',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.indigo,
+                        ),
+                      ),),
+                      SizedBox(height: 10),
+                      ListTile(
+                        leading: Icon(Icons.info),
+                        title: Text('تماس با پشتیبانی '),
+                        subtitle: Text('برای کمک فنی'),
+                        onTap: () {
+                          // Implement contact IT support action
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.feedback),
+                        title: Text('بازخورد'),
+                        subtitle: Text('ارسال بازخورد شما'),
+                        onTap: () {
+                          // Implement feedback action
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget buildButton(BuildContext context, String label, String route) {
+    return TextButton(
+      onPressed: () {
+        Navigator.pushNamed(context, route);
+      },
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(16)),
+        shape: MaterialStateProperty.all<OutlinedBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
       ),
     );
   }
