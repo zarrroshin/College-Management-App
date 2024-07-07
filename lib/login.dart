@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert'; // Import for JSON encoding/decoding
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
   String response = '';
-  String serverAddress = "127.0.0.1"; // Default to localhost
+  String serverAddress = "172.21.192.1"; // Default to localhost
 
   @override
   Widget build(BuildContext context) {
@@ -117,8 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                     checklogin();
                   },
                   child: Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ورود',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -151,53 +152,78 @@ class _LoginPageState extends State<LoginPage> {
       final socket = await Socket.connect(serverAddress, 8080);
 
       var postRequest = jsonEncode({
-        'command': 'POST',
-        'studentId': student_id.text,
+        'command': 'POST:login',
+        'username': student_id.text,
         'password': password.text,
       });
 
-      socket.write('$postRequest\n');
+      socket.writeln(postRequest);
       await socket.flush();
 
-      socket.listen((List<int> event) {
-        setState(() {
-          response = utf8.decode(event);
-        });
+      print("Waiting for server response...");
 
-        // Check the server response and show a toast notification
-        if (response.contains('success')) {
-          Fluttertoast.showToast(
-            msg: "Login Successful!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
+      // Buffer to collect the response
+      StringBuffer responseBuffer = StringBuffer();
 
-          // Navigate to the profile page
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => ProfilePage()),
-          );
-        } else {
-          Fluttertoast.showToast(
-            msg: "Login Failed! Please check your credentials.",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0,
-          );
-        }
-      });
+      // Read the response from the server
+      socket.listen(
+            (Uint8List data) {
+          String serverResponse = String.fromCharCodes(data);
+          responseBuffer.write(serverResponse);
+          print("Response received: $serverResponse");
 
-      socket.close();
+          if (serverResponse.endsWith('\n')) {
+            // Process the response when a complete line is received
+            handleServerResponse(responseBuffer.toString().trim());
+            responseBuffer.clear(); // Clear the buffer for future responses
+          }
+        },
+        onDone: () {
+          print("Connection closed by server");
+          socket.close();
+        },
+        onError: (error) {
+          print("Error: $error");
+          socket.close();
+        },
+      );
     } catch (e) {
       Fluttertoast.showToast(
         msg: "Error: $e",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      print("Error: $e");
+    }
+  }
+
+  void handleServerResponse(String response) {
+    var jsonResponse = jsonDecode(response);
+    String status = jsonResponse['status'];
+    String message = jsonResponse['message'];
+
+    if (status == 'success') {
+      Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,

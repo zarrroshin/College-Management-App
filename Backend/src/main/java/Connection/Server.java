@@ -1,18 +1,26 @@
 package Connection;
 
+import Controller.RegisterController;
+import Model.StudentModel;
+import View.RegisterView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class Server {
     private static final int PORT = 8080;
     private static final Gson gson = new Gson();
+    static StudentModel model = new StudentModel();
+    static RegisterView view = new RegisterView();
+    static RegisterController registerController = new RegisterController(model, view);
 
     public static void main(String[] args) {
         System.out.println("Welcome to the server!");
@@ -24,7 +32,7 @@ public class Server {
                 System.out.println("Client connected: " + clientSocket);
 
                 // Create a new thread for each client connection
-                new ClientHandler(clientSocket).start();
+                new ClientHandler(clientSocket, registerController).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,44 +43,45 @@ public class Server {
 class ClientHandler extends Thread {
     private final Socket socket;
     private final DataOutputStream dos;
-    private final DataInputStream dis;
-    private final Gson gson = new Gson();
-    private final JsonParser jsonParser = new JsonParser();
+    private final BufferedReader reader;
+    private final RegisterController registerController;
 
-    public ClientHandler(Socket socket) throws IOException {
+    public ClientHandler(Socket socket, RegisterController registerController) throws IOException {
         this.socket = socket;
         this.dos = new DataOutputStream(socket.getOutputStream());
-        this.dis = new DataInputStream(socket.getInputStream());
+        this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        this.registerController = registerController;
         System.out.println("Connected to client: " + socket);
     }
 
     @Override
     public void run() {
         try {
-            String request = dis.readUTF();
-            System.out.println("Received request: " + request);
+            String request;
+            while ((request = reader.readLine()) != null) {
+                System.out.println("Received request: " + request);
 
-            JsonObject jsonObject = jsonParser.parse(request).getAsJsonObject();
-            String command = jsonObject.get("command").getAsString();
-
-            switch (command) {
-                case "POST:login": {
-                    handleLogin(jsonObject);
-                    break;
+                JsonObject jsonObject = JsonParser.parseString(request).getAsJsonObject();
+                String command = jsonObject.get("command").getAsString();
+                switch (command) {
+                    case "POST:login": {
+                        handleLogin(jsonObject);
+                        break;
+                    }
+                    case "POST:register": {
+                        handleRegister(jsonObject);
+                        break;
+                    }
+                    default:
+                        sendResponse("Unsupported command");
                 }
-                case "POST:profile": {
-                    handleProfile(jsonObject);
-                    break;
-                }
-                default:
-                    sendResponse("Unsupported command");
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
                 dos.close();
-                dis.close();
+                reader.close();
                 socket.close();
                 System.out.println("Connection closed");
             } catch (IOException e) {
@@ -81,45 +90,39 @@ class ClientHandler extends Thread {
         }
     }
 
+    private void handleRegister(JsonObject jsonObject) throws IOException {
+        String username = jsonObject.get("username").getAsString();
+        String password = jsonObject.get("password").getAsString();
+        String password2 = jsonObject.get("password2").getAsString();
+        String student_id = jsonObject.get("studentId").getAsString();
+
+
+        JsonObject response = registerController.handleRegistration(username, student_id, password, password2);
+        sendResponse(response.toString());
+
+    }
+
     private void handleLogin(JsonObject jsonObject) throws IOException {
         String username = jsonObject.get("username").getAsString();
         String password = jsonObject.get("password").getAsString();
 
-        // Perform login logic, validate credentials, etc.
-        // Simulate login success for demonstration
-        boolean loginSuccessful = true;
+        boolean loginSuccessful = registerController.handleLoginControl(username, password);
 
         JsonObject responseJson = new JsonObject();
         responseJson.addProperty("command", "POST:login");
         if (loginSuccessful) {
             responseJson.addProperty("status", "success");
-            responseJson.addProperty("message", "Login successful");
+            responseJson.addProperty("message", "welcome!<3");
         } else {
             responseJson.addProperty("status", "error");
-            responseJson.addProperty("message", "Invalid username or password");
+            responseJson.addProperty("message", "username or password incorrect");
         }
 
         sendResponse(responseJson.toString());
     }
 
-    private void handleProfile(JsonObject jsonObject) throws IOException {
-        // Handle profile related operations
-        // This is just a placeholder, add your logic accordingly
-        String userId = jsonObject.get("userId").getAsString();
-        // Fetch profile data from database or other source
-        // Construct response JSON
-        JsonObject profileJson = new JsonObject();
-        profileJson.addProperty("command", "POST:profile");
-        profileJson.addProperty("userId", userId);
-        profileJson.addProperty("name", "John Doe");
-        profileJson.addProperty("email", "john.doe@example.com");
-        // Add more profile details as needed
-
-        sendResponse(profileJson.toString());
-    }
-
     private void sendResponse(String response) throws IOException {
-        dos.writeUTF(response);
+        dos.writeBytes(response + "\n");
         dos.flush();
         System.out.println("Sent response: " + response);
     }

@@ -1,16 +1,15 @@
-import 'dart:convert'; // Import for JSON encoding/decoding
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'login.dart'; // Assuming this is where your LoginPage is imported from
+import 'login.dart';
 
 class SignupPage extends StatelessWidget {
   TextEditingController username = TextEditingController();
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController password2 = TextEditingController();
-
-  String serverAddress = "127.0.0.1"; // Default to localhost
+  String response = "";
+  String serverAddress = "172.21.192.1";
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +72,12 @@ class SignupPage extends StatelessWidget {
                       labelText: 'نام کاربری',
                       hintText: 'نام کاربری خود را وارد کنید',
                       filled: true,
-                      fillColor: Colors.grey[200], // Background color
+                      fillColor: Colors.grey[200],
                       border: OutlineInputBorder(
-                        // Border
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: Icon(Icons.person, color: Colors.grey), // Icon
+                      prefixIcon: Icon(Icons.person, color: Colors.grey),
                     ),
                   ),
                 ),
@@ -93,13 +91,12 @@ class SignupPage extends StatelessWidget {
                       labelText: 'شماره دانشجویی',
                       hintText: 'شماره دانشجویی خود را وارد کنید',
                       filled: true,
-                      fillColor: Colors.grey[200], // Background color
+                      fillColor: Colors.grey[200],
                       border: OutlineInputBorder(
-                        // Border
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: Icon(Icons.email, color: Colors.grey), // Icon
+                      prefixIcon: Icon(Icons.email, color: Colors.grey),
                     ),
                   ),
                 ),
@@ -112,13 +109,12 @@ class SignupPage extends StatelessWidget {
                       labelText: 'رمز عبور',
                       hintText: 'رمز عبور خود را وارد کنید',
                       filled: true,
-                      fillColor: Colors.grey[200], // Background color
+                      fillColor: Colors.grey[200],
                       border: OutlineInputBorder(
-                        // Border
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
+                      prefixIcon: Icon(Icons.lock, color: Colors.grey),
                     ),
                     obscureText: true,
                   ),
@@ -132,13 +128,12 @@ class SignupPage extends StatelessWidget {
                       labelText: 'تکرار رمز عبور',
                       hintText: 'رمز عبور خود را دوباره وارد کنید',
                       filled: true,
-                      fillColor: Colors.grey[200], // Background color
+                      fillColor: Colors.grey[200],
                       border: OutlineInputBorder(
-                        // Border
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
+                      prefixIcon: Icon(Icons.lock, color: Colors.grey),
                     ),
                     obscureText: true,
                   ),
@@ -149,11 +144,10 @@ class SignupPage extends StatelessWidget {
                     backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
                   onPressed: () {
-                    registerUser(context); // Pass context to registerUser
+                    registerUser(context);
                   },
                   child: Padding(
-                    padding:
-                    EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ثبت نام',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -183,56 +177,93 @@ class SignupPage extends StatelessWidget {
       final socket = await Socket.connect(serverAddress, 8080);
 
       var postRequest = jsonEncode({
-        'command': 'POST',
+        'command': 'POST:register',
         'username': username.text,
         'studentId': student_id.text,
         'password': password.text,
+        'password2': password2.text,
       });
 
-      socket.write('$postRequest\n');
+      socket.writeln(postRequest);
       await socket.flush();
 
-      socket.listen((List<int> event) {
-        // Handle server response
-        var response = utf8.decode(event);
-        if (response.contains('success')) {
-          // Navigate to login page after successful registration
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
-          );
-        } else {
-          // Handle registration failure
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Registration Failed'),
-                content: Text('Failed to register user. Please try again.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      });
+      // Buffer to collect the response
+      StringBuffer responseBuffer = StringBuffer();
 
-      socket.close();
+      socket.listen(
+            (List<int> data) {
+          String serverResponse = String.fromCharCodes(data);
+          responseBuffer.write(serverResponse);
+
+          if (serverResponse.endsWith('\n')) {
+            handleServerResponse(responseBuffer.toString().trim(), context);
+            responseBuffer.clear();
+          }
+        },
+        onDone: () {
+          print("Connection closed by server");
+          socket.close();
+        },
+        onError: (error) {
+          print("Error: $error");
+          socket.close();
+        },
+      );
     } catch (e) {
       print('Error: $e');
-      // Handle socket connection error
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Connection Error'),
             content: Text('Failed to connect to the server.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void handleServerResponse(String response, BuildContext context) {
+    var jsonResponse = jsonDecode(response);
+    String status = jsonResponse['status'];
+    String message = jsonResponse['message'];
+
+    if (status == 'success') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Registration Successful'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Registration Failed'),
+            content: Text(message),
             actions: [
               TextButton(
                 onPressed: () {

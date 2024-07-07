@@ -29,11 +29,7 @@ public class StudentModel {
         }
     }
 
-    public Boolean CheckUnique(List<String> register_list) {
-        // register list --- > username(0) codeID(1)  ---> () means index  length of list is 2
-        String username = register_list.get(0);
-        String codeID = register_list.get(1);
-
+    public Boolean CheckUnique(String username, String codeID) {
         for (String[] student : students) {
             if (student[0].equalsIgnoreCase(username) || student[1].equalsIgnoreCase(codeID)) {
                 return false;
@@ -43,13 +39,12 @@ public class StudentModel {
 
     }
 
-    public Boolean Login(List<String> login_list) {
-        String username_or_codeID = login_list.get(0);
-        String password = login_list.get(1);
+    public Boolean Login(String username_or_codeId, String password) {
+
 
         for (String[] student : students) {
-            if ((student[0].equalsIgnoreCase(username_or_codeID)
-                    || student[1].equalsIgnoreCase(username_or_codeID))
+            if ((student[0].equalsIgnoreCase(username_or_codeId)
+                    || student[1].equalsIgnoreCase(username_or_codeId))
                     &&
                     student[2].equalsIgnoreCase(password)) {
                 return true;
@@ -59,10 +54,15 @@ public class StudentModel {
         return false;
     }
 
-    public Boolean AddStudentToDataBase(List<String> register_list) {
-        String text = register_list.get(0) + ","
-                + register_list.get(1) + ","
-                + register_list.get(2);
+    public Boolean AddStudentToDataBase(String username, String code_id, String password) {
+        String text = username + ","
+                + code_id + ","
+                + password;
+        List<String> register_list = new ArrayList<>();
+        register_list.add(username);
+        register_list.add(code_id);
+        register_list.add(password);
+
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true));
             writer.newLine();
@@ -73,6 +73,9 @@ public class StudentModel {
         } catch (IOException ioe) {
             System.out.println("Something Went Wrong Please try again!!!");
             ioe.printStackTrace();
+            register_list.remove(username);
+            register_list.remove(code_id);
+            register_list.remove(password);
             return false;
         }
     }
