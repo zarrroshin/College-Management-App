@@ -3,7 +3,8 @@ import 'login.dart';
 import 'signup.dart';
 import 'home.dart';
 import 'profile.dart';
-import 'work_page.dart'; // Import the WorkPage file
+import 'work_page.dart';
+import 'news_page.dart'; // Import the NewsPage file
 
 void main() {
   runApp(MyApp());
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => SignupPage(),
         '/home': (context) => HomePage(),
         '/profile': (context) => ProfilePage(),
-        '/work': (context) => WorkPage(), // Add route for WorkPage
+        '/work': (context) => WorkPage(),
+        '/news': (context) => NewsPage(), // Add route for NewsPage
       },
     );
   }

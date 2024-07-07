@@ -34,6 +34,13 @@ class HomePage extends StatelessWidget {
               },
               child: Text('صفحه کارا'), // Work Page
             ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/news'); // Navigate to NewsPage
+              },
+              child: Text('صفحه خبرا'), // News Page
+            ),
           ],
         ),
       ),
