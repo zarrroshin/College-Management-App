@@ -91,7 +91,7 @@ class ProfilePage extends StatelessWidget {
               // Username Field
               buildEditableField(
                 context,
-                'نام کاربری',
+                'نام کاربری                                                                                         ',
                 'نام کاربری خود را وارد کنید',
                 usernameController,
                 false, // Non-editable
@@ -101,7 +101,7 @@ class ProfilePage extends StatelessWidget {
               // Student ID Field
               buildEditableField(
                 context,
-                'شماره دانشجویی',
+                'شماره دانشجویی                                                                                        ',
                 'شماره دانشجویی خود را وارد کنید',
                 studentIdController,
                 false, // Non-editable
@@ -111,7 +111,7 @@ class ProfilePage extends StatelessWidget {
               // Department Field
               buildEditableField(
                 context,
-                'دانشکده',
+                'دانشکده                                                                                        ',
                 'دانشکده خود را وارد کنید',
                 departmentController,
               ),
@@ -120,7 +120,7 @@ class ProfilePage extends StatelessWidget {
               // Phone Field
               buildEditableField(
                 context,
-                'شماره تماس',
+                'شماره تماس                                                                                        ',
                 'شماره تماس خود را وارد کنید',
                 phoneController,
               ),
@@ -196,7 +196,6 @@ class ProfilePage extends StatelessWidget {
     return TextFormField(
       controller: controller,
       textAlign: TextAlign.right,
-      textDirection: TextDirection.rtl, // Add this line
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
