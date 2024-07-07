@@ -6,10 +6,13 @@ class SignupPage extends StatelessWidget {
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController password2 = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.indigo,),
+      appBar: AppBar(
+        backgroundColor: Colors.indigo,
+      ),
       body: Container(
         color: Colors.white,
         child: Center(
@@ -31,11 +34,11 @@ class SignupPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                    child: Image.asset(
-                      'assets/university_logo.jpg',
-                      height: 200,
-                    ),
+                  child: Image.asset(
+                    'assets/university_logo.jpg',
+                    height: 200,
                   ),
+                ),
                 SizedBox(height: 20),
                 Center(
                   child: Text(
@@ -59,24 +62,26 @@ class SignupPage extends StatelessWidget {
                 SizedBox(height: 30),
                 TextFormField(
                   controller: username,
+                  textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'نام کاربری',
-                    hintText:'نام کاربری خود را وارد کنید' ,
+                    labelText: 'نام کاربری                                                  ',
+                    hintText: 'نام کاربری خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
                     border: OutlineInputBorder( // Border
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
-                    prefixIcon: Icon(Icons.person, color: Colors.grey), // Icon
+                    suffixIcon: Icon(Icons.person, color: Colors.grey), // Icon on the right
                   ),
                 ),
                 SizedBox(height: 10),
                 TextFormField(
                   controller: student_id,
                   keyboardType: TextInputType.number,
+                  textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'شماره دانشجویی',
+                    labelText: 'شماره دانشجویی                                              ',
                     hintText: 'شماره دانشجویی خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
@@ -84,14 +89,15 @@ class SignupPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
-                    prefixIcon: Icon(Icons.email, color: Colors.grey), // Icon
+                    suffixIcon: Icon(Icons.email, color: Colors.grey), // Icon on the right
                   ),
                 ),
                 SizedBox(height: 10),
                 TextField(
                   controller: password,
+                  textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'رمز عبور',
+                    labelText: 'رمز عبور                                                 ',
                     hintText: 'رمز عبور خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
@@ -99,14 +105,16 @@ class SignupPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
-                    prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
+                    suffixIcon: Icon(Icons.lock, color: Colors.grey), // Icon on the right
                   ),
                   obscureText: true,
-                ),SizedBox(height: 10),
+                ),
+                SizedBox(height: 10),
                 TextField(
                   controller: password2,
+                  textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'تکرار رمز عبور',
+                    labelText: 'تکرار رمز عبور                                          ',
                     hintText: 'رمز عبور خود را دوباره وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
@@ -114,13 +122,15 @@ class SignupPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
-                    prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
+                    suffixIcon: Icon(Icons.lock, color: Colors.grey), // Icon on the right
                   ),
                   obscureText: true,
                 ),
                 SizedBox(height: 30),
-                ElevatedButton(style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.indigo)),
-
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.indigo),
+                  ),
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
@@ -131,7 +141,7 @@ class SignupPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ثبت نام',
-                      style: TextStyle(fontSize: 18,color: Colors.white),
+                      style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
                 ),
@@ -139,7 +149,10 @@ class SignupPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('حساب کاربری دارید؟ وارد شوید', style: TextStyle(color: Colors.black)),
+                  child: Text(
+                    'حساب کاربری دارید؟ وارد شوید',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ],
             ),
