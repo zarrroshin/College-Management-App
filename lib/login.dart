@@ -63,7 +63,7 @@ class LoginPage extends StatelessWidget {
                   controller: student_id,
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: ' شماره دانشجویی / نام کاربری',
+                    labelText: ' شماره دانشجویی / نام کاربری                               ',
                     alignLabelWithHint: true,
                     hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
                     filled: true,
@@ -81,7 +81,7 @@ class LoginPage extends StatelessWidget {
                   controller: password,
                   textAlign: TextAlign.right,
                   decoration: InputDecoration(
-                    labelText: 'رمز عبور',
+                    labelText: 'رمز عبور                                                    ',
                     alignLabelWithHint: true,
                     hintText: 'رمز عبور خود را وارد نمایید',
                     filled: true,
