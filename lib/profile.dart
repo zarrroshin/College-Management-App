@@ -7,6 +7,12 @@ class ProfilePage extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
+  // Initialize initial values
+  ProfilePage() {
+    nameController.text = 'علی محمدی '; // Set initial value for نام و نام خانوادگی field
+    studentIdController.text='402249087';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,11 +32,27 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: Colors.indigo,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // Default Image of Student
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 16),
+                  height: 190,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage('assets/profile_picture.jpg'), // Placeholder image
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 40),
               // Name Field
               buildEditableField(
                 context,
@@ -43,7 +65,7 @@ class ProfilePage extends StatelessWidget {
               // Student ID Field
               buildEditableField(
                 context,
-                'شماره دانشجویی                                                        ',
+                'شماره دانشجویی                                                          ',
                 'شماره دانشجویی خود را وارد کنید',
                 studentIdController,
               ),
@@ -52,7 +74,7 @@ class ProfilePage extends StatelessWidget {
               // Department Field
               buildEditableField(
                 context,
-                'دانشکده                                                              ',
+                'دانشکده                                                          ',
                 'دانشکده خود را وارد کنید',
                 departmentController,
               ),
@@ -61,7 +83,7 @@ class ProfilePage extends StatelessWidget {
               // Email Field
               buildEditableField(
                 context,
-                'ایمیل                                                              ',
+                'ایمیل                                                          ',
                 'ایمیل خود را وارد کنید',
                 emailController,
               ),
@@ -70,11 +92,11 @@ class ProfilePage extends StatelessWidget {
               // Phone Field
               buildEditableField(
                 context,
-                'شماره تماس                                                          ',
+                'شماره تماس                                                       ',
                 'شماره تماس خود را وارد کنید',
                 phoneController,
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
 
               // Save Button
               ElevatedButton(
