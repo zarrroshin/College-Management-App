@@ -4,14 +4,35 @@ import 'work_page.dart';
 import 'news_page.dart';
 import 'exercise_page.dart';
 import 'classes_page.dart';
+import 'login.dart'; // Import the LoginPage file
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Align(alignment: Alignment.bottomRight,child:Text('صفحه اصلی ',style: TextStyle(color: Colors.white,fontSize: 23,fontWeight: FontWeight.bold, fontFamily: 'Roboto'))) ,
+        title: Align(
+          alignment: Alignment.bottomRight,
+          child: Text(
+            'صفحه اصلی',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Roboto',
+            ),
+          ),
+        ),
         backgroundColor: Colors.indigo,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,21 +59,27 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Align(alignment:Alignment.bottomRight,child: Text(
-                      'آخرین دستاوردهای دانشگاه',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.indigo,
+                    children: [
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          'آخرین دستاوردهای دانشگاه',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
+                        ),
                       ),
-                    ) ,),
-
                       SizedBox(height: 10),
-                  Align(alignment:Alignment.bottomRight,child:Text(
-                        ' NEWBIES  برگزاری مسابقه برنامه‌نویسی ',
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.right,
-                      ),),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          'برگزاری مسابقه برنامه‌نویسی NEWBIES',
+                          style: TextStyle(fontSize: 18),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -67,18 +94,21 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    Align(alignment:Alignment.bottomRight,child:Text(
-                        'ارتباط با پشتیبانی',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.indigo,
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          'ارتباط با پشتیبانی',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
                         ),
-                      ),),
+                      ),
                       SizedBox(height: 10),
                       ListTile(
                         leading: Icon(Icons.info),
-                        title: Text('تماس با پشتیبانی '),
+                        title: Text('تماس با پشتیبانی'),
                         subtitle: Text('برای کمک فنی'),
                         onTap: () {
                           // Implement contact IT support action
@@ -120,7 +150,12 @@ class HomePage extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Roboto',
+        ),
       ),
     );
   }
