@@ -67,7 +67,7 @@ class GeneralNewsTab extends StatelessWidget {
           title: 'همایش جوانی جمعیت',
           description:
           'همایش جوانی جمعیت، سه شنبه 12 تیر 1403 همزمان با روز مباهله پیامبر (ص) در دانشگاه شهید بهشتی برگزار شد',
-          url: '',
+          url: 'https://www.sbu.ac.ir/home5/-/asset_publisher/KkFrxP58GmrV/content/population-1/3740662?_com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_KkFrxP58GmrV_assetEntryId=307609533&_com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_KkFrxP58GmrV_redirect=https%3A%2F%2Fwww.sbu.ac.ir%2Fhome5%3Fp_p_id%3Dcom_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_KkFrxP58GmrV%26p_p_lifecycle%3D0%26p_p_state%3Dnormal%26p_p_mode%3Dview%26_com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_KkFrxP58GmrV_cur%3D0%26p_r_p_resetCur%3Dfalse%26_com_liferay_asset_publisher_web_portlet_AssetPublisherPortlet_INSTANCE_KkFrxP58GmrV_assetEntryId%3D307609533',
           imageUrl:
           'https://news.sbu.ac.ir/documents/3740662/305573774/%D9%86%D8%B4%D8%B3%D8%AA+%D8%AC%D9%88%D8%A7%D9%86%DB%8C+%D8%AC%D9%85%D8%B9%DB%8C%D8%AA-+%D8%AA%DB%8C%D8%B1+1403+%2842%29.jpg/88bbf964-7b97-b984-f146-91234fda6896?t=1719986819300', // Example image URL
         ),
@@ -93,7 +93,7 @@ class Events extends StatelessWidget {
           title: 'ششمین کنگره بین المللی و هجدهمین کنگره ژنتیک',
           description:
           'ششمین کنگره بین‌المللی و هجدهمین کنگره ملی ژنتیک 17 تا 19 تیر 1403 در دانشگاه شهید بهشتی برگزار می‌شود',
-          url: 'https://example.com/sports-news1',
+          url: '',
           imageUrl:
           'https://www.sbu.ac.ir/documents/46019/211038383/%DA%A9%D9%86%D9%81%D8%B1%D8%A7%D9%86%D8%B3+%DA%98%D9%86%D8%AA%DB%8C%DA%A9.jpg/5c7020d9-e5de-2e0b-8f4c-0fec8f9f96cd?t=1720260716270', // Example image URL
         ),
@@ -119,7 +119,7 @@ class Achievements extends StatelessWidget {
           title: 'دانشجوی دانشگاه شهید بهشتی دانشجو نمونه کشوری شد',
           description:
           'در سی و یکمین جشنواره دانشجوی نمونه کشور، دانشجوی دانشگاه شهید بهشتی به‌عنوان دانشجوی نمونه کشور معرفی شد',
-          url: 'https://example.com/sports-news1',
+          url: '',
           imageUrl:
           'https://www.sbu.ac.ir/documents/46019/223365089/1346170.jpg/eb299d8b-a961-80c7-9411-b4e812ad8d8e?t=1719895404670', // Example image URL
         ),
@@ -127,7 +127,7 @@ class Achievements extends StatelessWidget {
           title: 'کتاب مرجع کارکردهای اجرایی منتشر شد',
           description:
           'این کتاب برای نخستین بار در سال 1402، در 710 صفحه، در قطع رحلی و در انتشارات دانشگاه شهید بهشتی منتشر شده است و با قیمت 4.260.000 ریال عرضه می‌شود.',
-          url: 'https://example.com/sports-news2',
+          url: '',
           imageUrl:
           'https://www.sbu.ac.ir/documents/46019/49433389/%DA%A9%D8%AA%D8%A7%D8%A8+%D9%85%D8%B1%D8%AC%D8%B9+%DA%A9%D8%A7%D8%B1%DA%A9%D8%B1%D8%AF%D9%87%D8%A7%DB%8C+%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C%DB%8C.jpg/771e9afb-e621-f1dc-1205-73e6118f22dd?t=1719385882285', // Example image URL
         ),
@@ -227,7 +227,6 @@ class NewsWebViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('خبر'),
         backgroundColor: Colors.indigo,
       ),
       body: WebView(
