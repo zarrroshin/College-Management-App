@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'profile.dart'; // Import the ProfilePage file
 
 class HomePage extends StatelessWidget {
   @override
@@ -23,7 +24,7 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/profile');
+                Navigator.pushNamed(context, '/profile'); // Navigate to ProfilePage
               },
               child: Text('View Profile'),
             ),
