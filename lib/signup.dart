@@ -1,11 +1,15 @@
-import 'login.dart';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'login.dart';
 
 class SignupPage extends StatelessWidget {
   TextEditingController username = TextEditingController();
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController password2 = TextEditingController();
+  String response = "";
+  String serverAddress = "172.21.192.1";
 
   @override
   Widget build(BuildContext context) {
@@ -60,71 +64,79 @@ class SignupPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 30),
-                TextFormField(
-                  controller: username,
-                  textAlign: TextAlign.right,
-                  decoration: InputDecoration(
-                    labelText: 'نام کاربری                                                  ',
-                    hintText: 'نام کاربری خود را وارد کنید',
-                    filled: true,
-                    fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextFormField(
+                    controller: username,
+                    decoration: InputDecoration(
+                      labelText: 'نام کاربری',
+                      hintText: 'نام کاربری خود را وارد کنید',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.person, color: Colors.grey),
                     ),
-                    suffixIcon: Icon(Icons.person, color: Colors.grey), // Icon on the right
                   ),
                 ),
                 SizedBox(height: 10),
-                TextFormField(
-                  controller: student_id,
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.right,
-                  decoration: InputDecoration(
-                    labelText: 'شماره دانشجویی                                              ',
-                    hintText: 'شماره دانشجویی خود را وارد کنید',
-                    filled: true,
-                    fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextFormField(
+                    controller: student_id,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'شماره دانشجویی',
+                      hintText: 'شماره دانشجویی خود را وارد کنید',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.email, color: Colors.grey),
                     ),
-                    suffixIcon: Icon(Icons.email, color: Colors.grey), // Icon on the right
                   ),
                 ),
                 SizedBox(height: 10),
-                TextField(
-                  controller: password,
-                  textAlign: TextAlign.right,
-                  decoration: InputDecoration(
-                    labelText: 'رمز عبور                                                 ',
-                    hintText: 'رمز عبور خود را وارد کنید',
-                    filled: true,
-                    fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextField(
+                    controller: password,
+                    decoration: InputDecoration(
+                      labelText: 'رمز عبور',
+                      hintText: 'رمز عبور خود را وارد کنید',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.lock, color: Colors.grey),
                     ),
-                    suffixIcon: Icon(Icons.lock, color: Colors.grey), // Icon on the right
+                    obscureText: true,
                   ),
-                  obscureText: true,
                 ),
                 SizedBox(height: 10),
-                TextField(
-                  controller: password2,
-                  textAlign: TextAlign.right,
-                  decoration: InputDecoration(
-                    labelText: 'تکرار رمز عبور                                          ',
-                    hintText: 'رمز عبور خود را دوباره وارد کنید',
-                    filled: true,
-                    fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextField(
+                    controller: password2,
+                    decoration: InputDecoration(
+                      labelText: 'تکرار رمز عبور',
+                      hintText: 'رمز عبور خود را دوباره وارد کنید',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.lock, color: Colors.grey),
                     ),
-                    suffixIcon: Icon(Icons.lock, color: Colors.grey), // Icon on the right
+                    obscureText: true,
                   ),
-                  obscureText: true,
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(
@@ -132,10 +144,7 @@ class SignupPage extends StatelessWidget {
                     backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
+                    registerUser(context);
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
@@ -145,6 +154,7 @@ class SignupPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: 10),
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -160,5 +170,111 @@ class SignupPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> registerUser(BuildContext context) async {
+    try {
+      final socket = await Socket.connect(serverAddress, 8080);
+
+      var postRequest = jsonEncode({
+        'command': 'POST:register',
+        'username': username.text,
+        'studentId': student_id.text,
+        'password': password.text,
+        'password2': password2.text,
+      });
+
+      socket.writeln(postRequest);
+      await socket.flush();
+
+      // Buffer to collect the response
+      StringBuffer responseBuffer = StringBuffer();
+
+      socket.listen(
+            (List<int> data) {
+          String serverResponse = String.fromCharCodes(data);
+          responseBuffer.write(serverResponse);
+
+          if (serverResponse.endsWith('\n')) {
+            handleServerResponse(responseBuffer.toString().trim(), context);
+            responseBuffer.clear();
+          }
+        },
+        onDone: () {
+          print("Connection closed by server");
+          socket.close();
+        },
+        onError: (error) {
+          print("Error: $error");
+          socket.close();
+        },
+      );
+    } catch (e) {
+      print('Error: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Connection Error'),
+            content: Text('Failed to connect to the server.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void handleServerResponse(String response, BuildContext context) {
+    var jsonResponse = jsonDecode(response);
+    String status = jsonResponse['status'];
+    String message = jsonResponse['message'];
+
+    if (status == 'success') {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Registration Successful'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Registration Failed'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }
