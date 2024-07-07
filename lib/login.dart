@@ -6,11 +6,12 @@ class LoginPage extends StatelessWidget {
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.indigo,),
+      appBar: AppBar(
+        backgroundColor: Colors.indigo,
+      ),
       body: Container(
         color: Colors.white,
         child: Center(
@@ -32,11 +33,11 @@ class LoginPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                    child: Image.asset(
-                      'assets/university_logo.jpg',
-                      height: 200,
-                    ),
+                  child: Image.asset(
+                    'assets/university_logo.jpg',
+                    height: 200,
                   ),
+                ),
                 SizedBox(height: 20),
                 Center(
                   child: Text(
@@ -60,36 +61,43 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 40),
                 TextFormField(
                   controller: student_id,
+                  textAlign: TextAlign.right,
                   decoration: InputDecoration(
                     labelText: ' شماره دانشجویی / نام کاربری',
+                    alignLabelWithHint: true,
                     hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
-                    prefixIcon: Icon(Icons.email, color: Colors.grey), // Icon
+                    suffixIcon: Icon(Icons.email, color: Colors.grey), // Icon on the right
                   ),
                 ),
                 SizedBox(height: 20),
                 TextFormField(
                   obscureText: true,
                   controller: password,
+                  textAlign: TextAlign.right,
                   decoration: InputDecoration(
                     labelText: 'رمز عبور',
+                    alignLabelWithHint: true,
                     hintText: 'رمز عبور خود را وارد نمایید',
                     filled: true,
                     fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder( // Border
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
-                    prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
+                    suffixIcon: Icon(Icons.lock, color: Colors.grey), // Icon on the right
                   ),
                 ),
                 SizedBox(height: 30),
-                ElevatedButton(style: ButtonStyle(backgroundColor:MaterialStateProperty.all(Colors.indigo)),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.indigo),
+                  ),
                   onPressed: () {
                     bool isLoggedIn = true;
                     if (isLoggedIn) {
@@ -103,7 +111,7 @@ class LoginPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ورود',
-                      style: TextStyle(fontSize: 18,color: Colors.white),
+                      style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
                 ),
@@ -115,7 +123,10 @@ class LoginPage extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );
                   },
-                  child: Text('حساب کاربری ندارید؟ ثبت نام کنید', style: TextStyle(color: Colors.black)),
+                  child: Text(
+                    'حساب کاربری ندارید؟ ثبت نام کنید',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ],
             ),
