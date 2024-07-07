@@ -2,4 +2,3 @@
 amir,amir1234,2
 ali,alireza12,3
 navid,navid1234,4
-mamad,mamad,

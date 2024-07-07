@@ -1,10 +1,24 @@
-import 'package:flutter/material.dart';
-import 'home.dart';
-import 'signup.dart';// Import the Home page file
+import 'dart:async';
+import 'dart:convert'; // Import for JSON encoding/decoding
+import 'dart:io';
+import 'dart:typed_data';
 
-class LoginPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'signup.dart';
+import 'profile.dart';
+import 'home.dart';
+
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
+  String response = '';
+  String serverAddress = "172.21.192.1"; // Default to localhost
 
   @override
   Widget build(BuildContext context) {
@@ -59,38 +73,44 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40),
-                TextFormField(
-                  controller: student_id,
-                  textAlign: TextAlign.right,
-                  decoration: InputDecoration(
-                    labelText: ' شماره دانشجویی / نام کاربری                               ',
-                    alignLabelWithHint: true,
-                    hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
-                    filled: true,
-                    fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextFormField(
+                    controller: student_id,
+                    decoration: InputDecoration(
+                      labelText: ' شماره دانشجویی / نام کاربری',
+                      hintText: 'شماره دانشجویی یا نام کاربری خود را وارد کنید',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      // Background color
+                      border: OutlineInputBorder(
+                        // Border
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.email, color: Colors.grey), // Icon
                     ),
-                    suffixIcon: Icon(Icons.email, color: Colors.grey), // Icon on the right
                   ),
                 ),
                 SizedBox(height: 20),
-                TextFormField(
-                  obscureText: true,
-                  controller: password,
-                  textAlign: TextAlign.right,
-                  decoration: InputDecoration(
-                    labelText: 'رمز عبور                                                    ',
-                    alignLabelWithHint: true,
-                    hintText: 'رمز عبور خود را وارد نمایید',
-                    filled: true,
-                    fillColor: Colors.grey[200], // Background color
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: password,
+                    decoration: InputDecoration(
+                      labelText: 'رمز عبور',
+                      hintText: 'رمز عبور خود را وارد نمایید',
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      // Background color
+                      border: OutlineInputBorder(
+                        // Border
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
                     ),
-                    suffixIcon: Icon(Icons.lock, color: Colors.grey), // Icon on the right
                   ),
                 ),
                 SizedBox(height: 30),
@@ -99,18 +119,11 @@ class LoginPage extends StatelessWidget {
                     backgroundColor: MaterialStateProperty.all(Colors.indigo),
                   ),
                   onPressed: () {
-                    // Simulate successful login for demonstration
-                    bool isLoggedIn = true;
-
-                    if (isLoggedIn) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()), // Navigate to HomePage instead of ProfilePage
-                      );
-                    }
+                    checklogin();
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ورود',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -136,5 +149,92 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> checklogin() async {
+    try {
+      final socket = await Socket.connect(serverAddress, 8080);
+
+      var postRequest = jsonEncode({
+        'command': 'POST:login',
+        'username': student_id.text,
+        'password': password.text,
+      });
+
+      socket.writeln(postRequest);
+      await socket.flush();
+
+      print("Waiting for server response...");
+
+      // Buffer to collect the response
+      StringBuffer responseBuffer = StringBuffer();
+
+      // Read the response from the server
+      socket.listen(
+        (Uint8List data) {
+          String serverResponse = String.fromCharCodes(data);
+          responseBuffer.write(serverResponse);
+          print("Response received: $serverResponse");
+
+          if (serverResponse.endsWith('\n')) {
+            // Process the response when a complete line is received
+            handleServerResponse(responseBuffer.toString().trim());
+            responseBuffer.clear(); // Clear the buffer for future responses
+          }
+        },
+        onDone: () {
+          print("Connection closed by server");
+          socket.close();
+        },
+        onError: (error) {
+          print("Error: $error");
+          socket.close();
+        },
+      );
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Error: $e",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      print("Error: $e");
+    }
+  }
+
+  void handleServerResponse(String response) {
+    var jsonResponse = jsonDecode(response);
+    String status = jsonResponse['status'];
+    String message = jsonResponse['message'];
+
+    if (status == 'success') {
+      Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 }

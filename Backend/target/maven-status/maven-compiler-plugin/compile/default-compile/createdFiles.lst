@@ -1,0 +1,6 @@
+Cli.class
+Connection\ClientHandler.class
+Controller\MainController.class
+Model\StudentModel.class
+Cli$1.class
+Connection\Server.class
