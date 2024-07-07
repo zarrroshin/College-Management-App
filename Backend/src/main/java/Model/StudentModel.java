@@ -2,12 +2,12 @@ package Model;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class StudentModel {
     private static final String FILE_PATH = "data/student.txt";
-    private static List<String[]> students;
+    private List<String[]> students;
+
 
     public StudentModel() {
         students = new ArrayList<String[]>();
@@ -18,8 +18,7 @@ public class StudentModel {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.trim().indexOf('*') == 0)
-                    continue;
+                if (line.trim().indexOf('*') == 0) continue;
                 String[] student_detail = line.split(",");
                 if (student_detail.length >= 3)
                     students.add(student_detail);
@@ -30,12 +29,7 @@ public class StudentModel {
         }
     }
 
-    public Boolean CheckUnique(List<String> register_list) {
-        // register list --- > username(0) codeID(1) ---> () means index length of list
-        // is 2
-        String username = register_list.get(0);
-        String codeID = register_list.get(1);
-
+    public Boolean CheckUnique(String username, String codeID) {
         for (String[] student : students) {
             if (student[0].equalsIgnoreCase(username) || student[1].equalsIgnoreCase(codeID)) {
                 return false;
@@ -45,28 +39,30 @@ public class StudentModel {
 
     }
 
-    public static int Login(String username_or_codeID, String password) {
-        int result = 0;
-        for (String[] student : students) {
-            if ((student[0].equalsIgnoreCase(username_or_codeID)
-                    || student[1].equalsIgnoreCase(username_or_codeID))) {
-                result = 1;
-                if (student[2].equalsIgnoreCase(password)) {
-                    result = 2;
-                    return result;
-                }
+    public Boolean Login(String username_or_codeId, String password) {
 
+
+        for (String[] student : students) {
+            if ((student[0].equalsIgnoreCase(username_or_codeId)
+                    || student[1].equalsIgnoreCase(username_or_codeId))
+                    &&
+                    student[2].equalsIgnoreCase(password)) {
+                return true;
             }
 
         }
-        return result;
-
+        return false;
     }
 
-    public Boolean AddStudentToDataBase(List<String> register_list) {
-        String text = register_list.get(0) + ","
-                + register_list.get(1) + ","
-                + register_list.get(2);
+    public Boolean AddStudentToDataBase(String username, String code_id, String password) {
+        String text = username + ","
+                + code_id + ","
+                + password;
+        List<String> register_list = new ArrayList<>();
+        register_list.add(username);
+        register_list.add(code_id);
+        register_list.add(password);
+
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true));
             writer.newLine();
@@ -77,6 +73,9 @@ public class StudentModel {
         } catch (IOException ioe) {
             System.out.println("Something Went Wrong Please try again!!!");
             ioe.printStackTrace();
+            register_list.remove(username);
+            register_list.remove(code_id);
+            register_list.remove(password);
             return false;
         }
     }
