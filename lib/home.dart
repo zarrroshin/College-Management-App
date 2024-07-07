@@ -48,6 +48,13 @@ class HomePage extends StatelessWidget {
               },
               child: Text('صفحه تمرینا'), // Exercise Page
             ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/classes'); // Navigate to ClassesPage
+              },
+              child: Text('صفحه کلاسا'), // Classes Page
+            ),
           ],
         ),
       ),
