@@ -59,7 +59,7 @@ class ClientHandler extends Thread {
         try {
             String request;
             while ((request = reader.readLine()) != null) {
-                System.out.println("Received request: " + request);
+                System.out.println("Received request: " + request);//lgoin,
 
                 JsonObject jsonObject = JsonParser.parseString(request).getAsJsonObject();
                 String command = jsonObject.get("command").getAsString();
