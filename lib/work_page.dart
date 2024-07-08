@@ -9,6 +9,17 @@ class _WorkPageState extends State<WorkPage> {
   List<Map<String, dynamic>> tasks = [];
   List<Map<String, dynamic>> completedTasks = [];
 
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize tasks with predefined values
+    tasks = [
+      {'title': 'AP_Project', 'dateTime': DateTime.now()},
+      {'title': 'checking github', 'dateTime': DateTime.now()},
+    ];
+  }
+
   void addTask(String title, DateTime dateTime) {
     setState(() {
       tasks.add({'title': title, 'dateTime': dateTime});
@@ -105,57 +116,91 @@ class _WorkPageState extends State<WorkPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('صفحه کارا'),
+        title: Align(
+          alignment: Alignment.bottomRight,
+          child: Text(
+            'صفحه کارا',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Roboto',
+            ),
+          ),
+        ),
         backgroundColor: Colors.indigo,
       ),
       body: Column(
         children: [
           Expanded(
-            child: tasks.isEmpty
-                ? Center(child: Text('هیچ کار پیش رو وجود ندارد'))
-                : ListView.builder(
-              itemCount: tasks.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(tasks[index]['title']),
-                  subtitle: Text(tasks[index]['dateTime'].toString()),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () => _editTask(index),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              color: Colors.white,
+              child: tasks.isEmpty
+                  ? Center(child: Text('هیچ کار پیش رو وجود ندارد'))
+                  : ListView.builder(
+                itemCount: tasks.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    elevation: 3,
+                    child: ListTile(
+                      title: Text(tasks[index]['title']),
+                      subtitle: Text(tasks[index]['dateTime'].toString()),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () => _editTask(index),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.check, color: Colors.green),
+                            onPressed: () => markTaskAsDone(index),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => deleteTask(index),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        icon: Icon(Icons.check, color: Colors.green),
-                        onPressed: () => markTaskAsDone(index),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => deleteTask(index),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           Divider(),
-          Text(
-            'کارهای انجام شده:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              color: Colors.indigo,
+              child: Text(
+                ': کارهای انجام شده',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
           ),
           Expanded(
-            child: completedTasks.isEmpty
-                ? Center(child: Text('هیچ کار انجام شده‌ای وجود ندارد'))
-                : ListView.builder(
-              itemCount: completedTasks.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(completedTasks[index]['title']),
-                  subtitle: Text(completedTasks[index]['dateTime'].toString()),
-                );
-              },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              color: Colors.grey[200],
+              child: completedTasks.isEmpty
+                  ? Center(child: Text('هیچ کار انجام شده‌ای وجود ندارد'))
+                  : ListView.builder(
+                itemCount: completedTasks.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    elevation: 3,
+                    child: ListTile(
+                      title: Text(completedTasks[index]['title']),
+                      subtitle: Text(completedTasks[index]['dateTime'].toString()),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],
