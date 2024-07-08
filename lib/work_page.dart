@@ -175,17 +175,21 @@ class _WorkPageState extends State<WorkPage> {
             alignment: Alignment.topRight,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              color: Colors.indigo,
+              decoration: BoxDecoration(
+                color: Colors.indigo,
+                borderRadius: BorderRadius.circular(22), // Adjust the radius as needed
+              ),
               child: Text(
-                ': کارهای انجام شده',
+                '  کارهای انجام شده   ',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
           ),
+
           Expanded(
             child: Container(
               padding: EdgeInsets.all(10),
-              color: Colors.grey[200],
+              color: Colors.white,
               child: completedTasks.isEmpty
                   ? Center(child: Text('هیچ کار انجام شده‌ای وجود ندارد'))
                   : ListView.builder(
