@@ -17,7 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
   String response = '';
-  String serverAddress = "10.0.0.4"; // Default to localhost
+  String serverAddress = "192.168.1.100"; // Default to localhost
+  bool _isPasswordVisible = false; // Password visibility state
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +96,8 @@ class _LoginPageState extends State<LoginPage> {
                 Directionality(
                   textDirection: TextDirection.rtl,
                   child: TextFormField(
-                    obscureText: true,
                     controller: password,
+                    obscureText: !_isPasswordVisible, // Toggle visibility
                     decoration: InputDecoration(
                       labelText: 'رمز عبور',
                       hintText: 'رمز عبور خود را وارد نمایید',
@@ -109,6 +110,19 @@ class _LoginPageState extends State<LoginPage> {
                         borderSide: BorderSide.none,
                       ),
                       prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -121,8 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                     checklogin();
                   },
                   child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ورود',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -170,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
 
       // Read the response from the server
       socket.listen(
-        (Uint8List data) {
+            (Uint8List data) {
           String serverResponse = String.fromCharCodes(data);
           responseBuffer.write(serverResponse);
           print("Response received: $serverResponse");

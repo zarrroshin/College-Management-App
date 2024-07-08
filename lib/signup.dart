@@ -3,13 +3,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'login.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
   TextEditingController username = TextEditingController();
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController password2 = TextEditingController();
   String response = "";
-  String serverAddress = "10.0.0.4";
+  String serverAddress = "192.168.1.100";
+  bool _isPasswordVisible = false;
+  bool _isPassword2Visible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +122,21 @@ class SignupPage extends StatelessWidget {
                         borderSide: BorderSide.none,
                       ),
                       prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
+                    obscureText: !_isPasswordVisible,
                   ),
                 ),
                 SizedBox(height: 10),
@@ -134,8 +154,21 @@ class SignupPage extends StatelessWidget {
                         borderSide: BorderSide.none,
                       ),
                       prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPassword2Visible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPassword2Visible = !_isPassword2Visible;
+                          });
+                        },
+                      ),
                     ),
-                    obscureText: true,
+                    obscureText: !_isPassword2Visible,
                   ),
                 ),
                 SizedBox(height: 30),
