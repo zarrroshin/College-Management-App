@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 
+// Assume LoginPage is defined elsewhere
+// import 'path_to_your_login_page.dart';
+
 class ProfilePage extends StatelessWidget {
-  TextEditingController nameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   TextEditingController studentIdController = TextEditingController();
   TextEditingController departmentController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+
+  // Initialize initial values
+  ProfilePage() {
+    usernameController.text = 'علی محمدی '; // Set initial value for نام کاربری field
+    studentIdController.text = '402249087';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,57 +33,98 @@ class ProfilePage extends StatelessWidget {
           ),
         ), // Profile Page
         backgroundColor: Colors.indigo,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              // Implement log-out confirmation dialog
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('خروج از حساب کاربری'),
+                    content: Text('آیا از خروج از حساب کاربری خود مطمئن هستید؟'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          // Perform log-out action
+                          Navigator.pushReplacementNamed(context, '/login');
+                        },
+                        child: Text('خروج'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('انصراف'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Name Field
+              // Default Image of Student
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 16),
+                  height: 190,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage('assets/profile_picture.jpg'), // Placeholder image
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 40),
+              // Username Field
               buildEditableField(
                 context,
-                'نام و نام خانوادگی                                                   ',
-                'نام و نام خانوادگی خود را وارد کنید',
-                nameController,
+                'نام کاربری                                                                                         ',
+                'نام کاربری خود را وارد کنید',
+                usernameController,
+                false, // Non-editable
               ),
               SizedBox(height: 10),
 
               // Student ID Field
               buildEditableField(
                 context,
-                'شماره دانشجویی                                                        ',
+                'شماره دانشجویی                                                                                        ',
                 'شماره دانشجویی خود را وارد کنید',
                 studentIdController,
+                false, // Non-editable
               ),
               SizedBox(height: 10),
 
               // Department Field
               buildEditableField(
                 context,
-                'دانشکده                                                              ',
+                'دانشکده                                                                                        ',
                 'دانشکده خود را وارد کنید',
                 departmentController,
-              ),
-              SizedBox(height: 10),
-
-              // Email Field
-              buildEditableField(
-                context,
-                'ایمیل                                                              ',
-                'ایمیل خود را وارد کنید',
-                emailController,
               ),
               SizedBox(height: 10),
 
               // Phone Field
               buildEditableField(
                 context,
-                'شماره تماس                                                          ',
+                'شماره تماس                                                                                        ',
                 'شماره تماس خود را وارد کنید',
                 phoneController,
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 80),
 
               // Save Button
               ElevatedButton(
@@ -82,7 +132,7 @@ class ProfilePage extends StatelessWidget {
                   // Save profile changes logic here
                   // Example: Update backend or local storage with new information
                   // You can access the edited values from controllers:
-                  // nameController.text, studentIdController.text, etc.
+                  // usernameController.text, studentIdController.text, etc.
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.indigo),
@@ -132,6 +182,9 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(color: Colors.red),
                 ),
               ),
+
+              SizedBox(height: 20),
+
             ],
           ),
         ),
@@ -139,7 +192,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget buildEditableField(BuildContext context, String label, String hint, TextEditingController controller) {
+  Widget buildEditableField(BuildContext context, String label, String hint, TextEditingController controller, [bool editable = true]) {
     return TextFormField(
       controller: controller,
       textAlign: TextAlign.right,
@@ -152,14 +205,17 @@ class ProfilePage extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide.none,
         ),
-        suffixIcon: IconButton(
+        suffixIcon: editable
+            ? IconButton(
           icon: Icon(Icons.edit),
           onPressed: () {
             // Implement edit functionality
             // You can use setState or showModalBottomSheet for editing
           },
-        ),
+        )
+            : null,
       ),
+      enabled: editable,
     );
   }
 }

@@ -24,15 +24,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.indigo,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
-          },
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -75,7 +66,7 @@ class HomePage extends StatelessWidget {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          'برگزاری مسابقه برنامه‌نویسی NEWBIES',
+                          ' NEWBIES  برگزاری مسابقه برنامه‌نویسی   ',
                           style: TextStyle(fontSize: 18),
                           textAlign: TextAlign.right,
                         ),
