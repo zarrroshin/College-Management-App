@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:ap_finalproject/home.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'home.dart';
 
 class SignupPage extends StatelessWidget {
   TextEditingController username = TextEditingController();
@@ -248,7 +250,7 @@ class SignupPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
                 child: Text('OK'),
@@ -272,7 +274,7 @@ class SignupPage extends StatelessWidget {
                 child: Text('OK'),
               ),
             ],
-          );
+          );  
         },
       );
     }
