@@ -66,7 +66,7 @@ class HomePage extends StatelessWidget {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          'برگزاری مسابقه برنامه‌نویسی NEWBIES',
+                          ' NEWBIES  برگزاری مسابقه برنامه‌نویسی   ',
                           style: TextStyle(fontSize: 18),
                           textAlign: TextAlign.right,
                         ),
