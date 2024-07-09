@@ -75,33 +75,31 @@ class _ExercisePageState extends State<ExercisePage> {
       builder: (BuildContext context) {
         String estimatedTime = exercise['estimatedTime'];
         String description = exercise['description'];
+
         return AlertDialog(
-          title: Text(exercise['title']),
+          title: Align(alignment: Alignment.topRight,child:Text(exercise['title']),),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('روز باقی مانده تا ددلاین: ${exercise['dueDate'].difference(DateTime.now()).inDays}'),
+            children: [Align(alignment: Alignment.topRight,child:
+              Text('روز باقی مانده تا ددلاین: ${exercise['dueDate'].difference(DateTime.now()).inDays}')),
               SizedBox(height: 8),
-              Text('نمره: ${exercise['grade']}'),
+
+              Align(alignment: Alignment.topRight,child:Text('نمره: ${exercise['grade']}'),),
               SizedBox(height: 8),
               TextField(
                 controller: TextEditingController(text: estimatedTime),
-                onChanged: (value) {
-                  estimatedTime = value;
-                },
+                readOnly: true, // Make the TextField non-editable
                 decoration: InputDecoration(
-                  labelText: 'مدت زمان تخمینی',
+                  labelText: 'مدت زمان تخمینی ',
                 ),
               ),
               SizedBox(height: 8),
               TextField(
                 controller: TextEditingController(text: description),
-                onChanged: (value) {
-                  description = value;
-                },
+                readOnly: true, // Make the TextField non-editable
                 decoration: InputDecoration(
-                  labelText: 'توضیحات',
+                  labelText: 'توضیحات                                            ',
                 ),
               ),
             ],
@@ -113,31 +111,22 @@ class _ExercisePageState extends State<ExercisePage> {
                 Navigator.of(context).pop();
               },
             ),
-            TextButton(
-              child: Text('ذخیره'),
-              onPressed: () {
-                setState(() {
-                  exercise['estimatedTime'] = estimatedTime;
-                  exercise['description'] = description;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
           ],
         );
       },
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title:Align(
-        alignment: Alignment.bottomRight,
-        child: Text('صفحه تمرینا',style: TextStyle(color: Colors.white, fontSize: 23,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Roboto',),),), // Exercise Page
+          alignment: Alignment.bottomRight,
+          child: Text('تمرین ها',style: TextStyle(color: Colors.white, fontSize: 23,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Roboto',),),), // Exercise Page
         backgroundColor: Colors.indigo,
       ),
       body: ListView.builder(

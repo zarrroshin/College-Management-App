@@ -11,15 +11,19 @@ class _ClassesPageState extends State<ClassesPage> {
       'courseId': 'CS101',
       'courseName': 'ساختمان داده',
       'professor': 'وحیدی اصل',
-      'schedule': 'دوشنبه ها 8:00 - 11:00 ',
-      'students': ['student1', 'student2']
+      'students': ['student1', 'student2'],
+      'units': 3,
+      'topStudent': 'student2',
+      'remainingAssignments': 2,
     },
     {
       'courseId': 'MATH201',
       'courseName': 'ریاضی 2',
       'professor': 'بوالحسنی',
-      'schedule': 'چهارشنبه ها 5:00 - 6:00',
-      'students': ['student1']
+      'students': ['student1'],
+      'units': 4,
+      'topStudent': 'student1',
+      'remainingAssignments': 1,
     },
   ];
 
@@ -28,29 +32,37 @@ class _ClassesPageState extends State<ClassesPage> {
       'courseId': 'CS101',
       'courseName': 'ساختمان داده',
       'professor': 'وحیدی اصل',
-      'schedule': 'دوشنبه ها 8:00 - 11:00 ',
-      'students': ['student1', 'student2']
+      'students': ['student1', 'student2'],
+      'units': 3,
+      'topStudent': 'student2',
+      'remainingAssignments': 2,
     },
     {
       'courseId': 'MATH201',
       'courseName': 'ریاضی 2',
       'professor': 'بوالحسنی',
-      'schedule': 'چهارشنبه ها 5:00 - 6:00',
-      'students': ['student1']
+      'students': ['student1'],
+      'units': 4,
+      'topStudent': 'student1',
+      'remainingAssignments': 1,
     },
     {
       'courseId': 'PHYS301',
       'courseName': 'فیزیک 1',
       'professor': 'دکتر جلالی',
-      'schedule': 'سه‌شنبه‌ها 9:00 - 10:30',
-      'students': []
+      'students': [],
+      'units': 3,
+      'topStudent': '',
+      'remainingAssignments': 0,
     },
     {
       'courseId': 'CHEM101',
       'courseName': 'شیمی عمومی',
       'professor': 'دکتر کاظمی',
-      'schedule': 'پنجشنبه‌ها 11:00 - 12:30',
-      'students': []
+      'students': [],
+      'units': 3,
+      'topStudent': '',
+      'remainingAssignments': 0,
     },
   ];
 
@@ -139,7 +151,7 @@ class _ClassesPageState extends State<ClassesPage> {
         title: Align(
           alignment: Alignment.bottomRight,
           child: Text(
-            'صفحه کلاسا',
+            'کلاس ها',
             style: TextStyle(
               color: Colors.white,
               fontSize: 23,
@@ -164,33 +176,72 @@ class _ClassesPageState extends State<ClassesPage> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     elevation: 5,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(16),
-                      leading: Icon(Icons.class_, color: Colors.indigo),
-                      title: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          classes[index]['courseName'],
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                      subtitle: Column(
+                    child: Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          SizedBox(height: 8),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Text('استاد: ${classes[index]['professor']}',
-                                textAlign: TextAlign.right),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Icon(Icons.class_, color: Colors.indigo, size: 40),
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    classes[index]['courseName'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Text('ساعت کلاسی: ${classes[index]['schedule']}',
-                                textAlign: TextAlign.right),
+                          SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text('استاد: ${classes[index]['professor']}',
+                                  textAlign: TextAlign.right),
+                              SizedBox(width: 8),
+                              Icon(Icons.person, color: Colors.indigo),
+                            ],
+                          ),
+                          SizedBox(height: 4),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text('تعداد واحد: ${classes[index]['units']}',
+                                  textAlign: TextAlign.right),
+                              SizedBox(width: 8),
+                              Icon(Icons.book, color: Colors.indigo),
+                            ],
+                          ),
+                          SizedBox(height: 4),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text('دانشجوی ممتاز: ${classes[index]['topStudent']}',
+                                  textAlign: TextAlign.right),
+                              SizedBox(width: 8),
+                              Icon(Icons.star, color: Colors.indigo),
+                            ],
+                          ),
+                          SizedBox(height: 4),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text('تعداد تکالیف باقی‌مانده: ${classes[index]['remainingAssignments']}',
+                                  textAlign: TextAlign.right),
+                              SizedBox(width: 8),
+                              Icon(Icons.assignment, color: Colors.indigo),
+                            ],
                           ),
                         ],
                       ),
