@@ -66,10 +66,10 @@ class _ClassesPageState extends State<ClassesPage> {
             'courseId': course['cpr_id'],
             'courseName': course['name'],
             'professor': course['professor'],
-            'tudents': [],
+            'students': [], // Initialize the students list here
             'units': course['vahed'],
             'topStudent': '',
-            'emainingAssignments': course['numofassign'],
+            'remainingAssignments': course['numofassign'],
           });
         }
 
@@ -91,10 +91,56 @@ class _ClassesPageState extends State<ClassesPage> {
     }
   }
 
+  Future<void> fetchStdClassData() async {
+    final userdataSession =
+        Provider.of<UserdataSession>(context, listen: false);
+    try {
+      final response = await http.get(Uri.parse(
+          'http://${serverAddress}/stdClassData?studentId=${userdataSession.studentId}'));
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print('JSON Data: $jsonData');
+
+        List<Map<String, dynamic>> newClasses = [];
+        for (var course in jsonData['Courses']) {
+          newClasses.add({
+            'courseId': course['cpr_id'],
+            'courseName': course['name'],
+            'professor': course['professor'],
+            'students': [], // Initialize the students list here
+            'units': course['vahed'],
+            'topStudent': '',
+            'remainingAssignments': course['numofassign'],
+          });
+        }
+
+        setState(() {
+          classes = newClasses;
+        });
+        print('UI updated with fetched data');
+      } else {
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+      if (e is SocketException) {
+        print('Handling connection reset by peer...');
+        // Optionally, retry the request
+        await Future.delayed(Duration(seconds: 2)); // Delay before retrying
+        await fetchClassData(); // Retry the fetch
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     fetchClassData();
+    fetchStdClassData();
   }
 
   String newCourseId = '';
@@ -105,7 +151,8 @@ class _ClassesPageState extends State<ClassesPage> {
     for (var cls in offeredCourses) {
       if (cls['courseId'] == courseId) {
         classExists = true;
-        if (!cls['students'].contains(currentStudent)) {
+        if (cls['students'] != null &&
+            !cls['students'].contains(currentStudent)) {
           setState(() {
             cls['students'].add(currentStudent);
             classes.add(cls);

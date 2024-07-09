@@ -3,6 +3,7 @@ package Connection;
 import Controller.CourseController;
 import Controller.RegisterController;
 import Model.CourseOfferModel;
+import Model.CourseStdModel;
 import Model.StudentModel;
 import Model.TeacherModel;
 import View.RegisterView;
@@ -24,8 +25,11 @@ public class Server {
     static StudentModel model = new StudentModel();
     static RegisterView view = new RegisterView();
     static TeacherModel teacherModel = new TeacherModel();
+
+    static CourseStdModel courseStdModel = new CourseStdModel();
+    static StudentModel studentModel = new StudentModel();
     static CourseOfferModel courseOfferModel = new CourseOfferModel();
-    static CourseController courseController = new CourseController(courseOfferModel, teacherModel);
+    static CourseController courseController = new CourseController(courseOfferModel, teacherModel, courseStdModel, studentModel);
     static RegisterController registerController = new RegisterController(model, view);
 
     public static void main(String[] args) {
@@ -73,8 +77,10 @@ class ClientHandler extends Thread {
                         String username = command.substring(command.indexOf("=") + 1);
                         handleProfileRequest(username, dos);
                     } else if (command.startsWith("classesData")) {
+                        handleClassesRequest(dos);
+                    } else if (command.startsWith("stdClassData")) {
                         String username = command.substring(command.indexOf("=") + 1);
-                        handleClassesRequest(username, dos);
+                        handleStdClassesRequest(username, dos);
                     }
                 } else if (request.contains("POST")) {
                     jsonObject = JsonParser.parseString(request).getAsJsonObject();
@@ -95,7 +101,13 @@ class ClientHandler extends Thread {
         }
     }
 
-    private void handleClassesRequest(String user, DataOutputStream dos) throws IOException {
+    private void handleStdClassesRequest(String user, DataOutputStream dos) throws IOException {
+        JsonObject responseJson = courseController.getStdCourseList(user);
+        System.out.println("STD ::: " + responseJson);
+        sendResponseFetch(dos, responseJson.toString());
+    }
+
+    private void handleClassesRequest(DataOutputStream dos) throws IOException {
         JsonObject responseJson = courseController.getCourseList();
         responseJson.addProperty("command", "GET:profile");
         sendResponseFetch(dos, responseJson.toString());

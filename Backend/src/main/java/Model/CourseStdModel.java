@@ -6,22 +6,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CourseOfferModel {
-    private static final String FILE_PATH = "data/coursePresented.txt";
-    private List<String[]> courses;
+public class CourseStdModel {
+    private static final String FILE_PATH = "data/coursestd.txt";
+    private List<String[]> std_courses;
 
-    public CourseOfferModel() {
-        courses = new ArrayList<>();
-        loadCourse();
+    public CourseStdModel() {
+        std_courses = new ArrayList<>();
+        loadStdCourse();
     }
 
-    private void loadCourse() {
+    private void loadStdCourse() {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().indexOf('*') == 0) continue;
                 String[] course_detail = line.split(",");
-                courses.add(course_detail);
+                std_courses.add(course_detail);
             }
         } catch (IOException e) {
             System.out.println("Error!!");
@@ -29,8 +29,7 @@ public class CourseOfferModel {
         }
     }
 
-    // fizik,1,9-10;
-    public List<String> getCourse() {
+    public List<String> getStdCourse() {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             List<String> list_course = new ArrayList<>();
@@ -49,16 +48,4 @@ public class CourseOfferModel {
         return null;
     }
 
-    //    *name,teacher_id,time,vahed,numofassign,cpr_id
-//    fizik,2,9-11,3,null,1
-//    ap,1,12-3,3,null,2
-    public String getDetailStdCourse(String id) {
-        for (String[] item : courses) {
-            if (item[5].equals(id)) {
-                System.out.println(item[3]);
-                return item[0] + "-" + item[2] + "-" + item[3] + "-" + item[4] + "-" + item[1];
-            }
-        }
-        return "error-error";
-    }
 }

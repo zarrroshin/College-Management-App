@@ -90,5 +90,13 @@ public class StudentModel {
 
         return "error-error";
     }
+    public String getStudentId(String username){
+        for (String[] student : students){
+            if (student[0].equalsIgnoreCase(username)){
+                return student[1];
+            }
+        }
+        return "error";
+    }
 
 }
