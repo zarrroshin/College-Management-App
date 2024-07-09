@@ -78,7 +78,7 @@ class ClientHandler extends Thread {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("socket closed!!!!!!");
         } finally {
             closeSocket();
         }
@@ -90,7 +90,10 @@ class ClientHandler extends Thread {
         responseJson.addProperty("command", "GET:profile");
 
         if (user != null) {
+            System.out.println("thereee1");
             String[] detailStudent = registerController.handleProfile(user).split("-");
+            System.out.println("theree2");
+
             if (!detailStudent[0].equals("error")) {
                 responseJson.addProperty("username", user);
                 responseJson.addProperty("studentId", detailStudent[1]);

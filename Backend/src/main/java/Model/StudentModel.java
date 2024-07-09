@@ -57,7 +57,9 @@ public class StudentModel {
     public Boolean AddStudentToDataBase(String username, String code_id, String password) {
         String text = username + ","
                 + code_id + ","
-                + password;
+                + password + ","
+                + "null" + ","
+                + "null";
         List<String> register_list = new ArrayList<>();
         register_list.add(username);
         register_list.add(code_id);

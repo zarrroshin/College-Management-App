@@ -1,3 +1,4 @@
 *username,code_id(pk),password,daneshkade,shomaretamas
 amir,1234,amiramir,null,null
-ali,1244,ali,null,null
+seyed,111123,seyedseyed,null,null
+zarr,2020,zarrzarr,null,null

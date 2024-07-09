@@ -19,17 +19,7 @@ public class RegisterController {
     public JsonObject handleRegistration(String username, String student_id, String password, String password2) {
         JsonObject response = new JsonObject();
         // Passwords Verifications
-        if (!password.equals(password2)) {
-            System.out.println("Your Password aren't same !!!,Please try Again");
-            response.addProperty("status", "error");
-            response.addProperty("message", "Your Password aren't same !!!,Please try Again");
-            return response;
-        } else if (password.length() < 8) {
-            System.out.println("Your Password too short !!!,Please Enter a Strong Password!");
-            response.addProperty("status", "error");
-            response.addProperty("message", "Your Password too short !!!,Please Enter a Strong Password!");
-            return response;
-        }
+
 
         // Check codeID should be just numbers and have a length between 4 and 8
         Pattern pattern = Pattern.compile("^[0-9]{4,8}$");

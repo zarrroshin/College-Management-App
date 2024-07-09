@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:ap_finalproject/home.dart';
+import 'package:ap_finalproject/userdataSession.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login.dart';
 import 'home.dart';
 
@@ -182,7 +184,8 @@ class _SignupPageState extends State<SignupPage> {
                     registerUser(context);
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ثبت نام',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -226,7 +229,7 @@ class _SignupPageState extends State<SignupPage> {
       StringBuffer responseBuffer = StringBuffer();
 
       socket.listen(
-            (List<int> data) {
+        (List<int> data) {
           String serverResponse = String.fromCharCodes(data);
           responseBuffer.write(serverResponse);
 
@@ -283,7 +286,7 @@ class _SignupPageState extends State<SignupPage> {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
                 child: Text('OK'),
@@ -307,7 +310,7 @@ class _SignupPageState extends State<SignupPage> {
                 child: Text('OK'),
               ),
             ],
-          );  
+          );
         },
       );
     }
