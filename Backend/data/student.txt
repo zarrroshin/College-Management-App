@@ -1,4 +1,3 @@
-*username,code_id(pk),password,daneshkade,shomaretamas
-amir,1234,amiramir,null,null
-seyed,111123,seyedseyed,null,null
-zarr,2020,zarrzarr,null,null
+*username,code_id(pk),password,daneshkade,shomaretamas,grade,numofunits
+amir,1234,amiramir,null,null,null,null
+

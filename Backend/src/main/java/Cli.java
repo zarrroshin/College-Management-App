@@ -2,14 +2,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
-
-import Model.SuperuserModel;
+import Model.*;
 
 public class Cli {
 
     public static void main(String[] args) {
         // Create a instance of super user model
         SuperuserModel superuserModel = new SuperuserModel();
+        TeacherModel teacherModel = new TeacherModel();
 
         // Creating instance of JFrame
         JFrame frame = new JFrame();
@@ -74,9 +74,15 @@ public class Cli {
                 String username = username_field.getText();
                 String password = String.valueOf(password_field.getPassword());
                 Boolean is_admin = adminButton.isSelected();
-
+                boolean login_check;
                 // Call the CheckLogin Function for enter user
-                boolean login_check = superuserModel.LoginUser(username, password, is_admin);
+                if(is_admin){
+                   login_check = superuserModel.LoginSuperUser(username, password);
+
+                }
+                else{
+                    login_check = teacherModel.LoginTeacher(username,password);
+                }
                 // Display login status message
                 if (login_check) {
                     label_login_status.setText("Login successful. Welcome!");

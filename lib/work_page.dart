@@ -119,7 +119,7 @@ class _WorkPageState extends State<WorkPage> {
         title: Align(
           alignment: Alignment.bottomRight,
           child: Text(
-            'صفحه کارا',
+            'کارها',
             style: TextStyle(
               color: Colors.white,
               fontSize: 23,
