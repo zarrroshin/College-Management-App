@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController student_id = TextEditingController();
   TextEditingController password = TextEditingController();
   String response = '';
-  String serverAddress = "192.168.1.100"; // Default to localhost
+  String serverAddress = "172.31.32.1"; // Default to localhost
   bool _isPasswordVisible = false; // Password visibility state
 
   @override

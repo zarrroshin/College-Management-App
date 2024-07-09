@@ -14,6 +14,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Server {
     private static final int PORT = 8080;
@@ -45,6 +47,7 @@ class ClientHandler extends Thread {
     private final DataOutputStream dos;
     private final BufferedReader reader;
     private final RegisterController registerController;
+    private Map<String, String> current_data = new HashMap<>();
 
     public ClientHandler(Socket socket, RegisterController registerController) throws IOException {
         this.socket = socket;
@@ -60,21 +63,40 @@ class ClientHandler extends Thread {
             String request;
             while ((request = reader.readLine()) != null) {
                 System.out.println("Received request: " + request);//lgoin,
+                String command = "";
+                JsonObject jsonObject;
+                System.out.println(request);
+                if (request.startsWith("GET /") || request.contains("Dart")) {
+                    System.out.println("there2");
+                    command = request.split("/")[1].split(" ")[0];
+                    switch (command) {
+                        case "profileData" -> {
+                            handleProfileRequest();
+                            break;
+                        }
+                        case "classData" -> {
+                            //ToDo
+                        }
+                    }
 
-                JsonObject jsonObject = JsonParser.parseString(request).getAsJsonObject();
-                String command = jsonObject.get("command").getAsString();
-                switch (command) {
-                    case "POST:login": {
-                        handleLogin(jsonObject);
-                        break;
+                } else {
+                    System.out.println("there1");
+                    jsonObject = JsonParser.parseString(request).getAsJsonObject();
+                    command = jsonObject.get("command").getAsString();
+                    switch (command) {
+                        case "POST:login" -> {
+                            handleLogin(jsonObject);
+                            break;
+                        }
+                        case "POST:register" -> {
+                            handleRegister(jsonObject);
+                            break;
+                        }
+                        default -> sendResponse("Unsupported command");
                     }
-                    case "POST:register": {
-                        handleRegister(jsonObject);
-                        break;
-                    }
-                    default:
-                        sendResponse("Unsupported command");
                 }
+
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,6 +111,31 @@ class ClientHandler extends Thread {
             }
         }
     }
+
+    private void handleProfileRequest() throws IOException {
+        JsonObject responseJson = new JsonObject();
+        responseJson.addProperty("command", "GET:profile");
+
+        String username_current = current_data.get("information");
+        System.out.println(username_current);
+        if (username_current != null) {
+            String[] detailStudent = registerController.handleProfile(username_current).split("-");
+            if (!detailStudent[1].equals("error")) {
+                responseJson.addProperty("username", username_current);
+                responseJson.addProperty("studentId", detailStudent[1]);
+                responseJson.addProperty("department", detailStudent[2]);
+                responseJson.addProperty("phone", detailStudent[3]);
+                sendResponse(responseJson.toString());
+            } else {
+                responseJson.addProperty("error", "Student details not found!");
+            }
+        } else {
+            responseJson.addProperty("error", "User not logged in!");
+        }
+
+        sendResponse(responseJson.toString());
+    }
+
 
     private void handleRegister(JsonObject jsonObject) throws IOException {
         String username = jsonObject.get("username").getAsString();

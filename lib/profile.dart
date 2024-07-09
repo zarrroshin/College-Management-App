@@ -1,19 +1,43 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-// Assume LoginPage is defined elsewhere
-// import 'path_to_your_login_page.dart';
+class ProfilePage extends StatefulWidget {
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
 
-class ProfilePage extends StatelessWidget {
+class _ProfilePageState extends State<ProfilePage> {
   TextEditingController usernameController = TextEditingController();
+
   TextEditingController studentIdController = TextEditingController();
+
   TextEditingController departmentController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController phoneController = TextEditingController();
 
-  // Initialize initial values
-  ProfilePage() {
-    usernameController.text = 'علی محمدی '; // Set initial value for نام کاربری field
-    studentIdController.text = '402249087';
+  // Replace with your actual laptop's IP address and port number
+  String serverAddress = "192.168.1.119:8080";
+
+  Future<void> fetchProducts() async {
+    print("-----first");
+    final response = await http.get(Uri.parse('http://$serverAddress/profileData'));
+    print(response);
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body);
+      print(jsonData);
+      print("----------------------------");
+    } else {
+      print('Error fetching data');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
   }
 
   @override
@@ -31,23 +55,22 @@ class ProfilePage extends StatelessWidget {
               fontFamily: 'Roboto',
             ),
           ),
-        ), // Profile Page
+        ),
         backgroundColor: Colors.indigo,
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              // Implement log-out confirmation dialog
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text('خروج از حساب کاربری'),
-                    content: Text('آیا از خروج از حساب کاربری خود مطمئن هستید؟'),
+                    content:
+                        Text('آیا از خروج از حساب کاربری خود مطمئن هستید؟'),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          // Perform log-out action
                           Navigator.pushReplacementNamed(context, '/login');
                         },
                         child: Text('خروج'),
@@ -72,7 +95,6 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Default Image of Student
               Center(
                 child: Container(
                   margin: EdgeInsets.only(bottom: 16),
@@ -81,83 +103,69 @@ class ProfilePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: AssetImage('assets/profile_picture.jpg'), // Placeholder image
+                      image: AssetImage('assets/profile_picture.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
               SizedBox(height: 40),
-              // Username Field
               buildEditableField(
                 context,
-                'نام کاربری                                                                                         ',
+                'نام کاربری',
                 'نام کاربری خود را وارد کنید',
                 usernameController,
-                false, // Non-editable
+                false,
               ),
               SizedBox(height: 10),
-
-              // Student ID Field
               buildEditableField(
                 context,
-                'شماره دانشجویی                                                                                        ',
+                'شماره دانشجویی',
                 'شماره دانشجویی خود را وارد کنید',
                 studentIdController,
-                false, // Non-editable
+                false,
               ),
               SizedBox(height: 10),
-
-              // Department Field
               buildEditableField(
                 context,
-                'دانشکده                                                                                        ',
+                'دانشکده',
                 'دانشکده خود را وارد کنید',
                 departmentController,
               ),
               SizedBox(height: 10),
-
-              // Phone Field
               buildEditableField(
                 context,
-                'شماره تماس                                                                                        ',
+                'شماره تماس',
                 'شماره تماس خود را وارد کنید',
                 phoneController,
               ),
               SizedBox(height: 80),
-
-              // Save Button
               ElevatedButton(
                 onPressed: () {
                   // Save profile changes logic here
-                  // Example: Update backend or local storage with new information
-                  // You can access the edited values from controllers:
-                  // usernameController.text, studentIdController.text, etc.
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.indigo),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                   child: Text(
                     'ذخیره تغییرات',
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),
-
               SizedBox(height: 20),
-
-              // Delete Account Button
               TextButton(
                 onPressed: () {
-                  // Implement delete account logic here
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('حذف حساب کاربری'),
-                        content: Text('آیا از حذف حساب کاربری خود مطمئن هستید؟'),
+                        content:
+                            Text('آیا از حذف حساب کاربری خود مطمئن هستید؟'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -182,9 +190,7 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(color: Colors.red),
                 ),
               ),
-
               SizedBox(height: 20),
-
             ],
           ),
         ),
@@ -192,7 +198,9 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget buildEditableField(BuildContext context, String label, String hint, TextEditingController controller, [bool editable = true]) {
+  Widget buildEditableField(BuildContext context, String label, String hint,
+      TextEditingController controller,
+      [bool editable = true]) {
     return TextFormField(
       controller: controller,
       textAlign: TextAlign.right,
@@ -200,19 +208,18 @@ class ProfilePage extends StatelessWidget {
         labelText: label,
         hintText: hint,
         filled: true,
-        fillColor: Colors.grey[200], // Background color
+        fillColor: Colors.grey[200],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide.none,
         ),
         suffixIcon: editable
             ? IconButton(
-          icon: Icon(Icons.edit),
-          onPressed: () {
-            // Implement edit functionality
-            // You can use setState or showModalBottomSheet for editing
-          },
-        )
+                icon: Icon(Icons.edit),
+                onPressed: () {
+                  // Implement edit functionality
+                },
+              )
             : null,
       ),
       enabled: editable,

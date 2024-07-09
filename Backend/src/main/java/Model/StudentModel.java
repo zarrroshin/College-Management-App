@@ -80,4 +80,14 @@ public class StudentModel {
         }
     }
 
+    public String getDetailStudent(String username) {
+        for (String[] student : students) {
+            if (student[0].equalsIgnoreCase(username)) {
+                return student[0] + "-" + student[1] + "-" + student[3] + "-" + student[4];
+            }
+        }
+
+        return "error";
+    }
+
 }

@@ -47,7 +47,7 @@ public class RegisterController {
                 System.out.println("Welcome " + username);
                 response.addProperty("status", "success");
                 response.addProperty("message", "register account was successfully");
-            }else {
+            } else {
                 response.addProperty("status", "error");
                 response.addProperty("message", "An error occurred during registration, please try again ");
             }
@@ -68,5 +68,9 @@ public class RegisterController {
         }
 
         return false;
+    }
+
+    public String handleProfile(String username) {
+        return model.getDetailStudent(username);
     }
 }
