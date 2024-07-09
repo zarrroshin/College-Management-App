@@ -1,4 +1,4 @@
-*username,code_id(pk),password,daneshkade,shomaretamas
+*username,code_id(pk),password,grade,numofunits
 amir,1234,amiramir
 ali,12345,ali12345
 mahdi,202012,mahdi2020
