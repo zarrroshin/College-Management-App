@@ -1,1 +1,2 @@
 *cpr_id,stu_id,grade,cstd_id
+1,1234,null,1

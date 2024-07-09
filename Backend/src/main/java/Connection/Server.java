@@ -1,7 +1,10 @@
 package Connection;
 
+import Controller.CourseController;
 import Controller.RegisterController;
+import Model.CourseOfferModel;
 import Model.StudentModel;
+import Model.TeacherModel;
 import View.RegisterView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -20,6 +23,9 @@ public class Server {
     private static final Gson gson = new Gson();
     static StudentModel model = new StudentModel();
     static RegisterView view = new RegisterView();
+    static TeacherModel teacherModel = new TeacherModel();
+    static CourseOfferModel courseOfferModel = new CourseOfferModel();
+    static CourseController courseController = new CourseController(courseOfferModel, teacherModel);
     static RegisterController registerController = new RegisterController(model, view);
 
     public static void main(String[] args) {
@@ -32,7 +38,7 @@ public class Server {
                 System.out.println("Client connected: " + clientSocket);
 
                 // Create a new thread for each client connection
-                new ClientHandler(clientSocket, registerController).start();
+                new ClientHandler(clientSocket, registerController, courseController).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,10 +49,12 @@ public class Server {
 class ClientHandler extends Thread {
     private final Socket socket;
     private final RegisterController registerController;
+    private final CourseController courseController;
 
-    public ClientHandler(Socket socket, RegisterController registerController) {
+    public ClientHandler(Socket socket, RegisterController registerController, CourseController courseController) {
         this.socket = socket;
         this.registerController = registerController;
+        this.courseController = courseController;
         System.out.println("Connected to client: " + socket);
     }
 
@@ -64,6 +72,9 @@ class ClientHandler extends Thread {
                     if (command.startsWith("profileData")) {
                         String username = command.substring(command.indexOf("=") + 1);
                         handleProfileRequest(username, dos);
+                    } else if (command.startsWith("classesData")) {
+                        String username = command.substring(command.indexOf("=") + 1);
+                        handleClassesRequest(username, dos);
                     }
                 } else if (request.contains("POST")) {
                     jsonObject = JsonParser.parseString(request).getAsJsonObject();
@@ -84,15 +95,18 @@ class ClientHandler extends Thread {
         }
     }
 
+    private void handleClassesRequest(String user, DataOutputStream dos) throws IOException {
+        JsonObject responseJson = courseController.getCourseList();
+        responseJson.addProperty("command", "GET:profile");
+        sendResponseFetch(dos, responseJson.toString());
+    }
+
     private void handleProfileRequest(String user, DataOutputStream dos) throws IOException {
-        System.out.println(user);
         JsonObject responseJson = new JsonObject();
         responseJson.addProperty("command", "GET:profile");
 
         if (user != null) {
-            System.out.println("thereee1");
             String[] detailStudent = registerController.handleProfile(user).split("-");
-            System.out.println("theree2");
 
             if (!detailStudent[0].equals("error")) {
                 responseJson.addProperty("username", user);

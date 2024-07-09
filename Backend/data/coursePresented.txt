@@ -1,1 +1,3 @@
 *name,teacher_id,time,vahed,numofassign,cpr_id
+fizik,2,9-11,3,null,1
+ap,1,12-3,3,null,2
