@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:ap_finalproject/userdataSession.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -20,17 +22,39 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Replace with your actual laptop's IP address and port number
   String serverAddress = "192.168.1.119:8080";
+  bool _dataFetched = false;
 
   Future<void> fetchProducts() async {
-    print("-----first");
-    final response = await http.get(Uri.parse('http://$serverAddress/profileData'));
-    print(response);
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(response.body);
-      print(jsonData);
-      print("----------------------------");
-    } else {
-      print('Error fetching data');
+    if (_dataFetched) return;
+    final userdataSession =
+        Provider.of<UserdataSession>(context, listen: false);
+
+    try {
+      final response = await http.get(Uri.parse(
+          'http://$serverAddress/profileData?studentId=${userdataSession.studentId}'));
+
+      if (response.statusCode == 200) {
+        print('Server response: ${response.body}');
+        final jsonData = jsonDecode(response.body);
+        // Extract the data from the JSON
+        final username = jsonData['username'];
+        final studentId = jsonData['studentId'];
+        final department = jsonData['department'];
+        final phone = jsonData['phone'];
+
+        // Update the text controllers with the fetched data
+        setState(() {
+          usernameController.text = username;
+          studentIdController.text = studentId;
+          departmentController.text = department;
+          phoneController.text = phone;
+          _dataFetched = true; // Set the flag to true
+        });
+      } else {
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
 

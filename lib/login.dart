@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert'; // Import for JSON encoding/decoding
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:provider/provider.dart';
 
+import 'package:ap_finalproject/userdataSession.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'signup.dart';
 import 'home.dart';
-
+import 'package:ap_finalproject/userdataSession.dart';
 class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   String response = '';
   String serverAddress = "172.31.32.1"; // Default to localhost
   bool _isPasswordVisible = false; // Password visibility state
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +110,8 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(10.0),
                         borderSide: BorderSide.none,
                       ),
-                      prefixIcon: Icon(Icons.lock, color: Colors.grey), // Icon
+                      prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                      // Icon
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible
@@ -135,7 +137,8 @@ class _LoginPageState extends State<LoginPage> {
                     checklogin();
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                     child: Text(
                       'ورود',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -174,6 +177,7 @@ class _LoginPageState extends State<LoginPage> {
         // sabtdata,1234
       });
 
+
       socket.writeln(postRequest);
       await socket.flush();
 
@@ -184,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
 
       // Read the response from the server
       socket.listen(
-            (Uint8List data) {
+        (Uint8List data) {
           String serverResponse = String.fromCharCodes(data);
           responseBuffer.write(serverResponse);
           print("Response received: $serverResponse");
@@ -233,7 +237,8 @@ class _LoginPageState extends State<LoginPage> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-
+      // Save student ID to global variable
+      Provider.of<UserdataSession>(context, listen: false).setStudentId(student_id.text);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),

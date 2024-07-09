@@ -14,8 +14,6 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Server {
     private static final int PORT = 8080;
@@ -47,7 +45,7 @@ class ClientHandler extends Thread {
     private final DataOutputStream dos;
     private final BufferedReader reader;
     private final RegisterController registerController;
-    private Map<String, String> current_data = new HashMap<>();
+
 
     public ClientHandler(Socket socket, RegisterController registerController) throws IOException {
         this.socket = socket;
@@ -62,25 +60,22 @@ class ClientHandler extends Thread {
         try {
             String request;
             while ((request = reader.readLine()) != null) {
-                System.out.println("Received request: " + request);//lgoin,
+                System.out.println("Received request: " + request);
+                if (request.isEmpty()) {
+                    continue;
+                }
                 String command = "";
                 JsonObject jsonObject;
                 System.out.println(request);
                 if (request.startsWith("GET /") || request.contains("Dart")) {
                     System.out.println("there2");
                     command = request.split("/")[1].split(" ")[0];
-                    switch (command) {
-                        case "profileData" -> {
-                            handleProfileRequest();
-                            break;
-                        }
-                        case "classData" -> {
-                            //ToDo
-                        }
+                    if (command.startsWith("profileData")) {
+                        String username = command.substring(command.indexOf("=") + 1);
+                        handleProfileRequest(username);
                     }
 
-                } else {
-                    System.out.println("there1");
+                } else if (request.contains("POST")) {
                     jsonObject = JsonParser.parseString(request).getAsJsonObject();
                     command = jsonObject.get("command").getAsString();
                     switch (command) {
@@ -94,6 +89,8 @@ class ClientHandler extends Thread {
                         }
                         default -> sendResponse("Unsupported command");
                     }
+                } else {
+                    System.out.println("server running!!");
                 }
 
 
@@ -112,20 +109,18 @@ class ClientHandler extends Thread {
         }
     }
 
-    private void handleProfileRequest() throws IOException {
+    private void handleProfileRequest(String user) throws IOException {
+        System.out.println(user);
         JsonObject responseJson = new JsonObject();
         responseJson.addProperty("command", "GET:profile");
 
-        String username_current = current_data.get("information");
-        System.out.println(username_current);
-        if (username_current != null) {
-            String[] detailStudent = registerController.handleProfile(username_current).split("-");
-            if (!detailStudent[1].equals("error")) {
-                responseJson.addProperty("username", username_current);
+        if (user != null) {
+            String[] detailStudent = registerController.handleProfile(user).split("-");
+            if (!detailStudent[0].equals("error")) {
+                responseJson.addProperty("username", user);
                 responseJson.addProperty("studentId", detailStudent[1]);
                 responseJson.addProperty("department", detailStudent[2]);
                 responseJson.addProperty("phone", detailStudent[3]);
-                sendResponse(responseJson.toString());
             } else {
                 responseJson.addProperty("error", "Student details not found!");
             }
@@ -133,7 +128,11 @@ class ClientHandler extends Thread {
             responseJson.addProperty("error", "User not logged in!");
         }
 
-        sendResponse(responseJson.toString());
+        try {
+            sendResponseFetch(responseJson.toString());
+        } catch (IOException e) {
+            System.out.println("Error sending response: " + e.getMessage());
+        }
     }
 
 
@@ -169,6 +168,16 @@ class ClientHandler extends Thread {
     }
 
     private void sendResponse(String response) throws IOException {
+        dos.writeBytes(response + "\n");
+        dos.flush();
+        System.out.println("Sent response: " + response);
+    }
+
+    private void sendResponseFetch(String response) throws IOException {
+        dos.writeBytes("HTTP/1.1 200 OK\n");
+        dos.writeBytes("Content-Type: application/json\n");
+        dos.writeBytes("Access-Control-Allow-Origin: *\n");
+        dos.writeBytes("\n"); // Empty line to indicate the end of headers
         dos.writeBytes(response + "\n");
         dos.flush();
         System.out.println("Sent response: " + response);
