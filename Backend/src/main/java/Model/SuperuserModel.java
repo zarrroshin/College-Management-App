@@ -5,12 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class SuperuserModel {
-    public Boolean LoginUser(String username, String password, Boolean is_admin) {
+    public Boolean LoginSuperUser(String username, String password) {
         // Check she/he login as a Teacher of Admin
         String file_path;
-        if (!is_admin) file_path = "data/teacher.txt";
-        else file_path = "data/super_user.txt";
-
+        file_path = "data/super_user.txt";
         // now Check DataBase for existing user in database or no - if yes will return True
         try (BufferedReader reader = new BufferedReader(new FileReader(file_path))) {
             String line;
