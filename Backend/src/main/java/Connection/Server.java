@@ -42,74 +42,49 @@ public class Server {
 
 class ClientHandler extends Thread {
     private final Socket socket;
-    private final DataOutputStream dos;
-    private final BufferedReader reader;
     private final RegisterController registerController;
 
-
-    public ClientHandler(Socket socket, RegisterController registerController) throws IOException {
+    public ClientHandler(Socket socket, RegisterController registerController) {
         this.socket = socket;
-        this.dos = new DataOutputStream(socket.getOutputStream());
-        this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
         this.registerController = registerController;
         System.out.println("Connected to client: " + socket);
     }
 
     @Override
     public void run() {
-        try {
+        try (DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {
             String request;
             while ((request = reader.readLine()) != null) {
                 System.out.println("Received request: " + request);
-                if (request.isEmpty()) {
-                    continue;
-                }
                 String command = "";
                 JsonObject jsonObject;
-                System.out.println(request);
                 if (request.startsWith("GET /") || request.contains("Dart")) {
-                    System.out.println("there2");
                     command = request.split("/")[1].split(" ")[0];
                     if (command.startsWith("profileData")) {
                         String username = command.substring(command.indexOf("=") + 1);
-                        handleProfileRequest(username);
+                        handleProfileRequest(username, dos);
                     }
-
                 } else if (request.contains("POST")) {
                     jsonObject = JsonParser.parseString(request).getAsJsonObject();
                     command = jsonObject.get("command").getAsString();
                     switch (command) {
-                        case "POST:login" -> {
-                            handleLogin(jsonObject);
-                            break;
-                        }
-                        case "POST:register" -> {
-                            handleRegister(jsonObject);
-                            break;
-                        }
-                        default -> sendResponse("Unsupported command");
+                        case "POST:login" -> handleLogin(jsonObject, dos);
+                        case "POST:register" -> handleRegister(jsonObject, dos);
+                        default -> sendResponse(dos, "Unsupported command");
                     }
                 } else {
                     System.out.println("server running!!");
                 }
-
-
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                dos.close();
-                reader.close();
-                socket.close();
-                System.out.println("Connection closed");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            closeSocket();
         }
     }
 
-    private void handleProfileRequest(String user) throws IOException {
+    private void handleProfileRequest(String user, DataOutputStream dos) throws IOException {
         System.out.println(user);
         JsonObject responseJson = new JsonObject();
         responseJson.addProperty("command", "GET:profile");
@@ -128,27 +103,20 @@ class ClientHandler extends Thread {
             responseJson.addProperty("error", "User not logged in!");
         }
 
-        try {
-            sendResponseFetch(responseJson.toString());
-        } catch (IOException e) {
-            System.out.println("Error sending response: " + e.getMessage());
-        }
+        sendResponseFetch(dos, responseJson.toString());
     }
 
-
-    private void handleRegister(JsonObject jsonObject) throws IOException {
+    private void handleRegister(JsonObject jsonObject, DataOutputStream dos) throws IOException {
         String username = jsonObject.get("username").getAsString();
         String password = jsonObject.get("password").getAsString();
         String password2 = jsonObject.get("password2").getAsString();
         String student_id = jsonObject.get("studentId").getAsString();
 
-
         JsonObject response = registerController.handleRegistration(username, student_id, password, password2);
-        sendResponse(response.toString());
-
+        sendResponse(dos, response.toString());
     }
 
-    private void handleLogin(JsonObject jsonObject) throws IOException {
+    private void handleLogin(JsonObject jsonObject, DataOutputStream dos) throws IOException {
         String username = jsonObject.get("username").getAsString();
         String password = jsonObject.get("password").getAsString();
 
@@ -164,22 +132,34 @@ class ClientHandler extends Thread {
             responseJson.addProperty("message", "username or password incorrect");
         }
 
-        sendResponse(responseJson.toString());
+        sendResponse(dos, responseJson.toString());
     }
 
-    private void sendResponse(String response) throws IOException {
+    private void sendResponse(DataOutputStream dos, String response) throws IOException {
         dos.writeBytes(response + "\n");
         dos.flush();
         System.out.println("Sent response: " + response);
     }
 
-    private void sendResponseFetch(String response) throws IOException {
+    private void sendResponseFetch(DataOutputStream dos, String response) throws IOException {
         dos.writeBytes("HTTP/1.1 200 OK\n");
         dos.writeBytes("Content-Type: application/json\n");
         dos.writeBytes("Access-Control-Allow-Origin: *\n");
         dos.writeBytes("\n"); // Empty line to indicate the end of headers
         dos.writeBytes(response + "\n");
         dos.flush();
+        dos.close();
         System.out.println("Sent response: " + response);
+    }
+
+    private void closeSocket() {
+        try {
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+                System.out.println("Socket closed");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

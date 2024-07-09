@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'package:ap_finalproject/userdataSession.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'userdataSession.dart'; // Ensure you import your userdataSession file
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -11,52 +12,58 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   TextEditingController usernameController = TextEditingController();
-
   TextEditingController studentIdController = TextEditingController();
-
   TextEditingController departmentController = TextEditingController();
-
-  TextEditingController emailController = TextEditingController();
-
   TextEditingController phoneController = TextEditingController();
 
-  // Replace with your actual laptop's IP address and port number
   String serverAddress = "192.168.1.119:8080";
-  bool _dataFetched = false;
 
   Future<void> fetchProducts() async {
-    if (_dataFetched) return;
-    final userdataSession =
-        Provider.of<UserdataSession>(context, listen: false);
+    final userdataSession = Provider.of<UserdataSession>(context, listen: false);
 
     try {
       final response = await http.get(Uri.parse(
-          'http://$serverAddress/profileData?studentId=${userdataSession.studentId}'));
+          'http://${serverAddress}/profileData?studentId=${userdataSession.studentId}'));
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        print('Server response: ${response.body}');
         final jsonData = jsonDecode(response.body);
-        // Extract the data from the JSON
+        print('JSON Data: $jsonData');
         final username = jsonData['username'];
         final studentId = jsonData['studentId'];
         final department = jsonData['department'];
         final phone = jsonData['phone'];
 
-        // Update the text controllers with the fetched data
         setState(() {
+          print('Updating UI with fetched data...');
+          print('Username: $username');
+          print('Student ID: $studentId');
+          print('Department: $department');
+          print('Phone: $phone');
+
           usernameController.text = username;
           studentIdController.text = studentId;
           departmentController.text = department;
           phoneController.text = phone;
-          _dataFetched = true; // Set the flag to true
         });
+
+        print('UI updated with fetched data');
       } else {
         print('Error fetching data: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
+      if (e is SocketException) {
+        print('Handling connection reset by peer...');
+        // Optionally, retry the request
+        await Future.delayed(Duration(seconds: 2)); // Delay before retrying
+        await fetchProducts(); // Retry the fetch
+      }
     }
   }
+
 
   @override
   void initState() {
@@ -90,8 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text('خروج از حساب کاربری'),
-                    content:
-                        Text('آیا از خروج از حساب کاربری خود مطمئن هستید؟'),
+                    content: Text('آیا از خروج از حساب کاربری خود مطمئن هستید؟'),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -172,8 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   backgroundColor: MaterialStateProperty.all(Colors.indigo),
                 ),
                 child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                  padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                   child: Text(
                     'ذخیره تغییرات',
                     style: TextStyle(fontSize: 18, color: Colors.white),
@@ -188,8 +193,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('حذف حساب کاربری'),
-                        content:
-                            Text('آیا از حذف حساب کاربری خود مطمئن هستید؟'),
+                        content: Text('آیا از حذف حساب کاربری خود مطمئن هستید؟'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -239,11 +243,11 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         suffixIcon: editable
             ? IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  // Implement edit functionality
-                },
-              )
+          icon: Icon(Icons.edit),
+          onPressed: () {
+            // Implement edit functionality
+          },
+        )
             : null,
       ),
       enabled: editable,
