@@ -63,7 +63,7 @@ class _ClassesPageState extends State<ClassesPage> {
         List<Map<String, dynamic>> newClasses = [];
         for (var course in jsonData['Courses']) {
           newClasses.add({
-            'courseId': course['name'],
+            'courseId': course['cpr_id'],
             'courseName': course['name'],
             'professor': course['professor'],
             'tudents': [],
@@ -74,7 +74,7 @@ class _ClassesPageState extends State<ClassesPage> {
         }
 
         setState(() {
-          classes = newClasses;
+          offeredCourses = newClasses;
         });
         print('UI updated with fetched data');
       } else {

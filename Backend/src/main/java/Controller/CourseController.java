@@ -32,6 +32,7 @@ public class CourseController {
             course.addProperty("vahed", split_item[3]);
             course.addProperty("numofassign", split_item[4]);
             course.addProperty("professor", teacherModel.getNameTeacher(split_item[1]));
+            course.addProperty("cpr_id",split_item[5]);
             ja.add(course);
         }
         response.add("Courses", ja);
