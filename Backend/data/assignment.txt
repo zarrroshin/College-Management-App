@@ -1,8 +1,2 @@
 *name,deadline,is_active,cpr_id,assign_id
-232,slk,,1212,1
-sdadsd,dsad,,adasd,1
-dmnlkd,kfkjdsl,,kdlesk,5
-ms nd,lkdmlks,true,kldfslk,6
-hgj,true,hgjg,1234,7
-hgj,true,hgjg,1234,8
-jhgjg,jhjg,true,hjhvj,9
+tm_1,2024-04-23,true,1,1

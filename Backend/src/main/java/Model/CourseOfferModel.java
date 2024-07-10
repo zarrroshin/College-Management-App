@@ -1,14 +1,13 @@
 package Model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CourseOfferModel {
     private static final String FILE_PATH = "data/coursePresented.txt";
     private List<String[]> courses;
+    TeacherModel teacherModel = new TeacherModel();
 
     public CourseOfferModel() {
         courses = new ArrayList<>();
@@ -27,6 +26,24 @@ public class CourseOfferModel {
             System.out.println("Error!!");
             e.printStackTrace();
         }
+    }
+
+    public Boolean AddCourseOfferToDataBase(String course_name, String teacher_name, String time, String vahed, String numOfAssign) {
+        String id = String.valueOf(Integer.parseInt(courses.get(courses.size() - 1)[5]) + 1);
+        String teacher_id = teacherModel.getTeacherId(teacher_name);
+        String text = course_name + "," + teacher_id + "," + time + "," + vahed + "," + numOfAssign + "," + id;
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true));
+            writer.newLine();
+            writer.write(text);
+            writer.close();
+            return true;
+        } catch (IOException ioe) {
+            System.out.println("Something Went Wrong Please try again!!!");
+            ioe.printStackTrace();
+            return false;
+        }
+
     }
 
     // fizik,1,9-10;

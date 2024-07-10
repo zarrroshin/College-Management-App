@@ -15,6 +15,7 @@ public class CourseController {
     TeacherModel teacherModel = new TeacherModel();
     CourseStdModel courseStdModel = new CourseStdModel();
     StudentModel studentModel = new StudentModel();
+    CourseOfferModel courseOfferModel = new CourseOfferModel();
 
     public CourseController(CourseOfferModel model, TeacherModel teacherModel, CourseStdModel courseStdModel, StudentModel studentModel) {
         this.model = model;
@@ -22,8 +23,12 @@ public class CourseController {
         this.courseStdModel = courseStdModel;
         this.studentModel = studentModel;
     }
-//    *name,teacher_id,time,vahed,numofassign,cpr_id
+
+    //    *name,teacher_id,time,vahed,numofassign,cpr_id
 //    fizik,2,9-11,3,null,1   -ap,1,12-3,3,null,2
+    public boolean AddNewCourse(String course_name, String teacher_name, String time, String vahed, String numOfAssign) {
+        return courseOfferModel.AddCourseOfferToDataBase(course_name, teacher_name, time, vahed, numOfAssign);
+    }
 
     public JsonObject getCourseList() {
         List<String> list_course = model.getCourse();

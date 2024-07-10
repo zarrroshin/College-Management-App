@@ -69,7 +69,7 @@ class ClientHandler extends Thread {
         try (DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))) {
             String request;
-            while ((request = reader.readLine()) != null) {
+            while ((request = reader.readLine())!= null) {
                 System.out.println("Received request: " + request);
                 String command = "";
                 JsonObject jsonObject;
@@ -78,11 +78,14 @@ class ClientHandler extends Thread {
                     if (command.startsWith("profileData")) {
                         String username = command.substring(command.indexOf("=") + 1);
                         handleProfileRequest(username, dos);
+
                     } else if (command.startsWith("classesData")) {
                         handleClassesRequest(dos);
+
                     } else if (command.startsWith("stdClassData")) {
                         String username = command.substring(command.indexOf("=") + 1);
                         handleStdClassesRequest(username, dos);
+
                     } else if (command.startsWith("addClassData")) {
                         Pattern pattern = Pattern.compile("studentId=([^&]+)&courseid=([^&]+)");
                         Matcher matcher = pattern.matcher(command);
@@ -98,6 +101,7 @@ class ClientHandler extends Thread {
                     switch (command) {
                         case "POST:login" -> handleLogin(jsonObject, dos);
                         case "POST:register" -> handleRegister(jsonObject, dos);
+                        case "POST:addTask" -> handleAddTask(jsonObject, dos);
                         default -> sendResponse(dos, "Unsupported command");
                     }
                 } else {
@@ -151,6 +155,21 @@ class ClientHandler extends Thread {
         sendResponseFetch(dos, responseJson.toString());
     }
 
+    private void handleAddTask(JsonObject jsonObject, DataOutputStream dos) throws IOException {
+        String title = jsonObject.get("title").getAsString();
+        String dateTimeString = jsonObject.get("dateTime").getAsString();
+
+        // Process the task addition request
+        System.out.println("Adding task: " + title + " at " + dateTimeString);
+
+        // Simulate a successful response
+        JsonObject responseJson = new JsonObject();
+        responseJson.addProperty("command", "POST:addTask");
+        responseJson.addProperty("status", "success");
+        responseJson.addProperty("message", "Task added successfully!");
+
+        sendResponseFetch(dos, responseJson.toString());
+    }
     private void handleRegister(JsonObject jsonObject, DataOutputStream dos) throws IOException {
         String username = jsonObject.get("username").getAsString();
         String password = jsonObject.get("password").getAsString();
