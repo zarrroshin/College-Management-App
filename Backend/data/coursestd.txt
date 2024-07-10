@@ -1,1 +1,2 @@
 *cpr_id,stu_id,grade,cstd_id
+1,1231236,17,1

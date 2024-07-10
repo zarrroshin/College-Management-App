@@ -1,65 +1,78 @@
 package Cli;
-import Controller.TeacherController;
+
+import Model.TeacherModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import Model.*;
-import Controller.TeacherController;
-public class DefineExerciseFrame extends JFrame {
 
-    private JTextField nameField;
+public class AddAssignmentFrame extends JFrame {
+
     private JTextField courseIdField;
+    private JTextField assignmentNameField;
     private JTextField deadlineField;
-    private JTextField isActiveField;
-    private JTextField assignmentIdField;
-    TeacherModel teacherModel = new TeacherModel();
-    TeacherController teacherController = new TeacherController(teacherModel);
+    private JCheckBox isActiveCheckBox;
 
-    public DefineExerciseFrame(String username) {
+    public AddAssignmentFrame() {
         setTitle("تعریف تمرین");
-        setSize(300, 300);
+        setSize(400, 400);
         setLayout(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        TeacherModel teacherModel =new TeacherModel();
         // Create labels and text fields
-        JLabel studentIdLabel = new JLabel("شماره دانشجویی:");
-        studentIdLabel.setBounds(50, 50, 100, 20);
-        add(studentIdLabel);
-
-        studentIdField = new JTextField();
-        studentIdField.setBounds(150, 50, 100, 20);
-        add(studentIdField);
-
         JLabel courseIdLabel = new JLabel("کد درس:");
-        courseIdLabel.setBounds(50, 100, 100, 20);
+        courseIdLabel.setBounds(50, 50, 100, 20);
         add(courseIdLabel);
 
         courseIdField = new JTextField();
-        courseIdField.setBounds(150, 100, 100, 20);
+        courseIdField.setBounds(150, 50, 200, 20);
         add(courseIdField);
 
-        JLabel gradeLabel = new JLabel("نمره:");
-        gradeLabel.setBounds(50, 150, 100, 20);
-        add(gradeLabel);
+        JLabel assignmentNameLabel = new JLabel("نام تمرین:");
+        assignmentNameLabel.setBounds(50, 100, 100, 20);
+        add(assignmentNameLabel);
 
-        gradeField = new JTextField();
-        gradeField.setBounds(150, 150, 100, 20);
-        add(gradeField);
+        assignmentNameField = new JTextField();
+        assignmentNameField.setBounds(150, 100, 200, 20);
+        add(assignmentNameField);
+
+        JLabel deadlineLabel = new JLabel("تاریخ ددلاین:");
+        deadlineLabel.setBounds(50, 150, 100, 20);
+        add(deadlineLabel);
+
+        deadlineField = new JTextField();
+        deadlineField.setBounds(150, 150, 200, 20);
+        add(deadlineField);
+
+        JLabel isActiveLabel = new JLabel("فعال:");
+        isActiveLabel.setBounds(50, 200, 100, 20);
+        add(isActiveLabel);
+
+        isActiveCheckBox = new JCheckBox();
+        isActiveCheckBox.setBounds(150, 200, 20, 20);
+        add(isActiveCheckBox);
 
         // Create submit button
         JButton submitButton = new JButton("ثبت");
-        submitButton.setBounds(100, 200, 100, 30);
+        submitButton.setBounds(150, 250, 100, 30);
         add(submitButton);
 
         // Add action listener to submit button
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String studentId = studentIdField.getText();
                 String courseId = courseIdField.getText();
-                String grade = gradeField.getText();
-                teacherModel.SetGrade(username, studentId, courseId, grade);
+                String assignmentName = assignmentNameField.getText();
+                String deadline = deadlineField.getText();
+                boolean isActive = isActiveCheckBox.isSelected();
+                String str;
+                if(isActive){
+                    str="true";
+                }
+                else{
+                    str="false";
+                }
+                teacherModel.DefineAssignmentTeacher(courseId, assignmentName, str, deadline);
             }
         });
     }

@@ -1,31 +1,34 @@
+package Cli;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
+
 import Model.*;
+import Controller.TeacherController;
 
 public class Cli {
-
     public static void main(String[] args) {
-        // Create a instance of super user model
+        // Create an instance of the super user model
         SuperuserModel superuserModel = new SuperuserModel();
         TeacherModel teacherModel = new TeacherModel();
+        TeacherController teacherController = new TeacherController(teacherModel);
 
-        // Creating instance of JFrame
+        // Creating an instance of JFrame
         JFrame frame = new JFrame();
 
-        // Create text field for take input from user
+        // Create text fields for user input
         JTextField username_field = new JTextField();
         JPasswordField password_field = new JPasswordField();
 
-        // Creating instance of JButton
+        // Creating an instance of JButton
         JButton button_login = new JButton("login");
 
-        // Create label
+        // Create labels
         JLabel label_username = new JLabel("username : ");
         JLabel label_password = new JLabel("password : ");
         JLabel label_login_status = new JLabel("");
-
 
         // Create radio buttons for user role selection
         JRadioButton teacherButton = new JRadioButton("Teacher");
@@ -56,18 +59,13 @@ public class Cli {
         frame.add(adminButton);
         frame.add(label_login_status);
 
-        // 400 width and 500 height
+        // Setting frame properties
         frame.setSize(500, 600);
         frame.setResizable(false);
-
-        // using no layout managers
         frame.setLayout(null);
-
-        // making the frame visible
         frame.setVisible(true);
 
-
-        // After Click On Buttons
+        // After clicking on the button
         button_login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,19 +73,21 @@ public class Cli {
                 String password = String.valueOf(password_field.getPassword());
                 Boolean is_admin = adminButton.isSelected();
                 boolean login_check;
-                // Call the CheckLogin Function for enter user
-                if(is_admin){
-                   login_check = superuserModel.LoginSuperUser(username, password);
-
-                }
-                else{
-                    login_check = teacherModel.LoginTeacher(username,password);
+                // Call the CheckLogin function for the user
+                if (is_admin) {
+                    login_check = superuserModel.LoginSuperUser(username, password);
+                } else {
+                    login_check = teacherController.checkLoginTeacher(username, password);
                 }
                 // Display login status message
                 if (login_check) {
                     label_login_status.setText("Login successful. Welcome!");
-                    // Open another frame or perform any other actions as needed
-                    // For example, you can open another JFrame or change the content of this frame
+                    frame.dispose(); // Close the login frame
+                    if (is_admin) {
+                        new AdminFrame().setVisible(true); // Open admin frame
+                    } else {
+                        new TeacherFrame(username).setVisible(true); // Open teacher frame
+                    }
                 } else {
                     label_login_status.setText("Login failed. Please check your credentials.");
                 }
