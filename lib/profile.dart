@@ -16,7 +16,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController departmentController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
-  String serverAddress = "192.168.1.119:8080";
+  String serverAddress = "172.20.115.46:8080";
 
   Future<void> fetchProducts() async {
     final userdataSession = Provider.of<UserdataSession>(context, listen: false);

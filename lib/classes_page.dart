@@ -12,7 +12,7 @@ class ClassesPage extends StatefulWidget {
 }
 
 class _ClassesPageState extends State<ClassesPage> {
-  String serverAddress = "192.168.1.119:8080";
+  String serverAddress = "172.20.115.46:8080";
   List<Map<String, dynamic>> classes = [
     {
       'courseId': '',

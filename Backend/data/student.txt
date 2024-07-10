@@ -1,3 +1,5 @@
 *username,code_id(pk),password,daneshkade,shomaretamas,grade,numofunits
 amir,1234,amiramir,null,null,null,null
 
+
+mamooti,40224312,amiramir,null,null,null,null

@@ -27,7 +27,7 @@ public class CourseController {
     //    *name,teacher_id,time,vahed,numofassign,cpr_id
 //    fizik,2,9-11,3,null,1   -ap,1,12-3,3,null,2
     public boolean AddNewCourse(String course_name, String teacher_name, String time, String vahed, String numOfAssign) {
-        return courseOfferModel.AddCourseOfferToDataBase(course_name, teacher_name, time, vahed, numOfAssign);
+        return courseOfferModel.AddCourseOfferToDataBase(course_name,teacher_name,time,vahed,numOfAssign);
     }
 
     public JsonObject getCourseList() {
