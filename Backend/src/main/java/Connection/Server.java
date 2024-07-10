@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Server {
     private static final int PORT = 8080;
@@ -81,6 +83,14 @@ class ClientHandler extends Thread {
                     } else if (command.startsWith("stdClassData")) {
                         String username = command.substring(command.indexOf("=") + 1);
                         handleStdClassesRequest(username, dos);
+                    } else if (command.startsWith("addClassData")) {
+                        Pattern pattern = Pattern.compile("studentId=([^&]+)&courseid=([^&]+)");
+                        Matcher matcher = pattern.matcher(command);
+                        if (matcher.find()) {
+                            handleStdSaveInDataBase(matcher.group(1), matcher.group(2), dos);
+                        } else {
+                            System.out.println("data dosnt work!!!");
+                        }
                     }
                 } else if (request.contains("POST")) {
                     jsonObject = JsonParser.parseString(request).getAsJsonObject();
@@ -99,6 +109,12 @@ class ClientHandler extends Thread {
         } finally {
             closeSocket();
         }
+    }
+
+    private void handleStdSaveInDataBase(String user, String cpr_id, DataOutputStream dos) throws IOException {
+        JsonObject responseJson = courseController.AddToCourseStudent(user, cpr_id);
+        System.out.println("data :" + responseJson);
+        sendResponseFetch(dos, responseJson.toString());
     }
 
     private void handleStdClassesRequest(String user, DataOutputStream dos) throws IOException {

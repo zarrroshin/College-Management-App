@@ -74,4 +74,16 @@ public class CourseController {
         return response;
     }
 
+    public JsonObject AddToCourseStudent(String username, String cpr_id) {
+        String student_id = studentModel.getStudentId(username);
+        Boolean check = courseStdModel.AddStdCourseToDatabase(cpr_id, student_id);
+        JsonObject response = new JsonObject();
+        if (check) {
+            response.addProperty("success", "taddaaaaa");
+        } else {
+            response.addProperty("error", "somthing went wrong!!! ");
+        }
+        return response;
+    }
+
 }
