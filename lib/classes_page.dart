@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:ap_finalproject/userdataSession.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class ClassesPage extends StatefulWidget {
   @override
@@ -6,6 +12,7 @@ class ClassesPage extends StatefulWidget {
 }
 
 class _ClassesPageState extends State<ClassesPage> {
+  String serverAddress = "192.168.1.119:8080";
   List<Map<String, dynamic>> classes = [
     {
       'courseId': 'CS101',
@@ -37,34 +44,104 @@ class _ClassesPageState extends State<ClassesPage> {
       'topStudent': 'student2',
       'remainingAssignments': 2,
     },
-    {
-      'courseId': 'MATH201',
-      'courseName': 'ریاضی 2',
-      'professor': 'بوالحسنی',
-      'students': ['student1'],
-      'units': 4,
-      'topStudent': 'student1',
-      'remainingAssignments': 1,
-    },
-    {
-      'courseId': 'PHYS301',
-      'courseName': 'فیزیک 1',
-      'professor': 'دکتر جلالی',
-      'students': [],
-      'units': 3,
-      'topStudent': '',
-      'remainingAssignments': 0,
-    },
-    {
-      'courseId': 'CHEM101',
-      'courseName': 'شیمی عمومی',
-      'professor': 'دکتر کاظمی',
-      'students': [],
-      'units': 3,
-      'topStudent': '',
-      'remainingAssignments': 0,
-    },
   ];
+
+  Future<void> fetchClassData() async {
+    final userdataSession =
+        Provider.of<UserdataSession>(context, listen: false);
+    try {
+      final response = await http.get(Uri.parse(
+          'http://${serverAddress}/classesData?studentId=${userdataSession.studentId}'));
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print('JSON Data: $jsonData');
+
+        List<Map<String, dynamic>> newClasses = [];
+        for (var course in jsonData['Courses']) {
+          newClasses.add({
+            'courseId': course['cpr_id'],
+            'courseName': course['name'],
+            'professor': course['professor'],
+            'students': [], // Initialize the students list here
+            'units': course['vahed'],
+            'topStudent': '',
+            'remainingAssignments': course['numofassign'],
+          });
+        }
+
+        setState(() {
+          offeredCourses = newClasses;
+        });
+        print('UI updated with fetched data');
+      } else {
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+      if (e is SocketException) {
+        print('Handling connection reset by peer...');
+        // Optionally, retry the request
+        await Future.delayed(Duration(seconds: 2)); // Delay before retrying
+        await fetchClassData(); // Retry the fetch
+      }
+    }
+  }
+
+  Future<void> fetchStdClassData() async {
+    final userdataSession =
+        Provider.of<UserdataSession>(context, listen: false);
+    try {
+      final response = await http.get(Uri.parse(
+          'http://${serverAddress}/stdClassData?studentId=${userdataSession.studentId}'));
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print('JSON Data: $jsonData');
+
+        List<Map<String, dynamic>> newClasses = [];
+        for (var course in jsonData['Courses']) {
+          newClasses.add({
+            'courseId': course['cpr_id'],
+            'courseName': course['name'],
+            'professor': course['professor'],
+            'students': [], // Initialize the students list here
+            'units': course['vahed'],
+            'topStudent': '',
+            'remainingAssignments': course['numofassign'],
+          });
+        }
+
+        setState(() {
+          classes = newClasses;
+        });
+        print('UI updated with fetched data');
+      } else {
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+      if (e is SocketException) {
+        print('Handling connection reset by peer...');
+        // Optionally, retry the request
+        await Future.delayed(Duration(seconds: 2)); // Delay before retrying
+        await fetchClassData(); // Retry the fetch
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchClassData();
+    fetchStdClassData();
+  }
 
   String newCourseId = '';
   String currentStudent = 'student3';
@@ -74,7 +151,8 @@ class _ClassesPageState extends State<ClassesPage> {
     for (var cls in offeredCourses) {
       if (cls['courseId'] == courseId) {
         classExists = true;
-        if (!cls['students'].contains(currentStudent)) {
+        if (cls['students'] != null &&
+            !cls['students'].contains(currentStudent)) {
           setState(() {
             cls['students'].add(currentStudent);
             classes.add(cls);
@@ -113,7 +191,7 @@ class _ClassesPageState extends State<ClassesPage> {
               itemCount: offeredCourses.length,
               itemBuilder: (context, index) {
                 bool isEnrolled = classes.any((cls) =>
-                cls['courseId'] == offeredCourses[index]['courseId'] &&
+                    cls['courseId'] == offeredCourses[index]['courseId'] &&
                     cls['students'].contains(currentStudent));
                 return Visibility(
                   visible: !isEnrolled,
@@ -186,7 +264,8 @@ class _ClassesPageState extends State<ClassesPage> {
                             children: [
                               Align(
                                 alignment: Alignment.topRight,
-                                child: Icon(Icons.class_, color: Colors.indigo, size: 40),
+                                child: Icon(Icons.class_,
+                                    color: Colors.indigo, size: 40),
                               ),
                               Expanded(
                                 child: Align(
@@ -227,7 +306,8 @@ class _ClassesPageState extends State<ClassesPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text('دانشجوی ممتاز: ${classes[index]['topStudent']}',
+                              Text(
+                                  'دانشجوی ممتاز: ${classes[index]['topStudent']}',
                                   textAlign: TextAlign.right),
                               SizedBox(width: 8),
                               Icon(Icons.star, color: Colors.indigo),
@@ -237,7 +317,8 @@ class _ClassesPageState extends State<ClassesPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text('تعداد تکالیف باقی‌مانده: ${classes[index]['remainingAssignments']}',
+                              Text(
+                                  'تعداد تکالیف باقی‌مانده: ${classes[index]['remainingAssignments']}',
                                   textAlign: TextAlign.right),
                               SizedBox(width: 8),
                               Icon(Icons.assignment, color: Colors.indigo),
@@ -287,7 +368,8 @@ class _ClassesPageState extends State<ClassesPage> {
                 addClass(newCourseId);
               },
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                 child: Text('افزودن کلاس',
                     style: TextStyle(fontSize: 16, color: Colors.white)),
               ),

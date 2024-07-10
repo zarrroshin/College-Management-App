@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login.dart';
 import 'signup.dart';
 import 'home.dart';
@@ -6,10 +7,16 @@ import 'profile.dart';
 import 'work_page.dart';
 import 'news_page.dart';
 import 'exercise_page.dart';
-import 'classes_page.dart'; // Import the ClassesPage file
+import 'classes_page.dart';
+import 'userdataSession.dart'; // Import the UserdataSession class
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserdataSession(), // Create an instance of UserdataSession
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -1,19 +1,74 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'userdataSession.dart'; // Ensure you import your userdataSession file
 
-// Assume LoginPage is defined elsewhere
-// import 'path_to_your_login_page.dart';
+class ProfilePage extends StatefulWidget {
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
 
-class ProfilePage extends StatelessWidget {
+class _ProfilePageState extends State<ProfilePage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController studentIdController = TextEditingController();
   TextEditingController departmentController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
-  // Initialize initial values
-  ProfilePage() {
-    usernameController.text = 'علی محمدی '; // Set initial value for نام کاربری field
-    studentIdController.text = '402249087';
+  String serverAddress = "192.168.1.119:8080";
+
+  Future<void> fetchProducts() async {
+    final userdataSession = Provider.of<UserdataSession>(context, listen: false);
+
+    try {
+      final response = await http.get(Uri.parse(
+          'http://${serverAddress}/profileData?studentId=${userdataSession.studentId}'));
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print('JSON Data: $jsonData');
+        final username = jsonData['username'];
+        final studentId = jsonData['studentId'];
+        final department = jsonData['department'];
+        final phone = jsonData['phone'];
+
+        setState(() {
+          print('Updating UI with fetched data...');
+          print('Username: $username');
+          print('Student ID: $studentId');
+          print('Department: $department');
+          print('Phone: $phone');
+
+          usernameController.text = username;
+          studentIdController.text = studentId;
+          departmentController.text = department;
+          phoneController.text = phone;
+        });
+
+        print('UI updated with fetched data');
+      } else {
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+      if (e is SocketException) {
+        print('Handling connection reset by peer...');
+        // Optionally, retry the request
+        await Future.delayed(Duration(seconds: 2)); // Delay before retrying
+        await fetchProducts(); // Retry the fetch
+      }
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProducts();
   }
 
   @override
@@ -31,13 +86,12 @@ class ProfilePage extends StatelessWidget {
               fontFamily: 'Roboto',
             ),
           ),
-        ), // Profile Page
+        ),
         backgroundColor: Colors.indigo,
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              // Implement log-out confirmation dialog
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -47,7 +101,6 @@ class ProfilePage extends StatelessWidget {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          // Perform log-out action
                           Navigator.pushReplacementNamed(context, '/login');
                         },
                         child: Text('خروج'),
@@ -72,7 +125,6 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Default Image of Student
               Center(
                 child: Container(
                   margin: EdgeInsets.only(bottom: 16),
@@ -81,58 +133,46 @@ class ProfilePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: AssetImage('assets/profile_picture.jpg'), // Placeholder image
+                      image: AssetImage('assets/profile_picture.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
               SizedBox(height: 40),
-              // Username Field
               buildEditableField(
                 context,
-                'نام کاربری                                                                                         ',
+                'نام کاربری',
                 'نام کاربری خود را وارد کنید',
                 usernameController,
-                false, // Non-editable
+                false,
               ),
               SizedBox(height: 10),
-
-              // Student ID Field
               buildEditableField(
                 context,
-                'شماره دانشجویی                                                                                        ',
+                'شماره دانشجویی',
                 'شماره دانشجویی خود را وارد کنید',
                 studentIdController,
-                false, // Non-editable
+                false,
               ),
               SizedBox(height: 10),
-
-              // Department Field
               buildEditableField(
                 context,
-                'دانشکده                                                                                        ',
+                'دانشکده',
                 'دانشکده خود را وارد کنید',
                 departmentController,
               ),
               SizedBox(height: 10),
-
-              // Phone Field
               buildEditableField(
                 context,
-                'شماره تماس                                                                                        ',
+                'شماره تماس',
                 'شماره تماس خود را وارد کنید',
                 phoneController,
               ),
               SizedBox(height: 80),
-
-              // Save Button
               ElevatedButton(
                 onPressed: () {
                   // Save profile changes logic here
-                  // Example: Update backend or local storage with new information
-                  // You can access the edited values from controllers:
-                  // usernameController.text, studentIdController.text, etc.
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.indigo),
@@ -145,13 +185,9 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
-
               SizedBox(height: 20),
-
-              // Delete Account Button
               TextButton(
                 onPressed: () {
-                  // Implement delete account logic here
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -182,9 +218,7 @@ class ProfilePage extends StatelessWidget {
                   style: TextStyle(color: Colors.red),
                 ),
               ),
-
               SizedBox(height: 20),
-
             ],
           ),
         ),
@@ -192,7 +226,9 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget buildEditableField(BuildContext context, String label, String hint, TextEditingController controller, [bool editable = true]) {
+  Widget buildEditableField(BuildContext context, String label, String hint,
+      TextEditingController controller,
+      [bool editable = true]) {
     return TextFormField(
       controller: controller,
       textAlign: TextAlign.right,
@@ -200,7 +236,7 @@ class ProfilePage extends StatelessWidget {
         labelText: label,
         hintText: hint,
         filled: true,
-        fillColor: Colors.grey[200], // Background color
+        fillColor: Colors.grey[200],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide.none,
@@ -210,7 +246,6 @@ class ProfilePage extends StatelessWidget {
           icon: Icon(Icons.edit),
           onPressed: () {
             // Implement edit functionality
-            // You can use setState or showModalBottomSheet for editing
           },
         )
             : null,

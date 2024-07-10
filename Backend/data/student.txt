@@ -1,10 +1,3 @@
-*username,code_id(pk),password,grade,numofunits
-amir,1234,amiramir
-ali,12345,ali12345
-mahdi,202012,mahdi2020
-seyed,123412,amirseyed
-alireza,31231,amirmahdi
-alirezaa,312231,amirmahdi
-alireszaa,3121231,amirmahdi
-mahmood,1231236,amirmahdi
-mamad,1212,amiramir
+*username,code_id(pk),password,daneshkade,shomaretamas,grade,numofunits
+amir,1234,amiramir,null,null,null,null
+

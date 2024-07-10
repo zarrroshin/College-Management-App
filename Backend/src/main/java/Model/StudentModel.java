@@ -57,7 +57,8 @@ public class StudentModel {
     public Boolean AddStudentToDataBase(String username, String code_id, String password) {
         String text = username + ","
                 + code_id + ","
-                + password;
+                + password + "," + "null,null,null,null";
+
         List<String> register_list = new ArrayList<>();
         register_list.add(username);
         register_list.add(code_id);
@@ -78,6 +79,24 @@ public class StudentModel {
             register_list.remove(password);
             return false;
         }
+    }
+
+    public String getDetailStudent(String username) {
+        for (String[] student : students) {
+            if (student[0].equalsIgnoreCase(username)) {
+                return student[0] + "-" + student[1] + "-" + student[3] + "-" + student[4];
+            }
+        }
+
+        return "error-error";
+    }
+    public String getStudentId(String username){
+        for (String[] student : students){
+            if (student[0].equalsIgnoreCase(username)){
+                return student[1];
+            }
+        }
+        return "error";
     }
 
 }
