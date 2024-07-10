@@ -15,34 +15,25 @@ class _ClassesPageState extends State<ClassesPage> {
   String serverAddress = "192.168.1.119:8080";
   List<Map<String, dynamic>> classes = [
     {
-      'courseId': 'CS101',
-      'courseName': 'ساختمان داده',
-      'professor': 'وحیدی اصل',
-      'students': ['student1', 'student2'],
-      'units': 3,
-      'topStudent': 'student2',
-      'remainingAssignments': 2,
-    },
-    {
-      'courseId': 'MATH201',
-      'courseName': 'ریاضی 2',
-      'professor': 'بوالحسنی',
-      'students': ['student1'],
-      'units': 4,
-      'topStudent': 'student1',
-      'remainingAssignments': 1,
+      'courseId': '',
+      'courseName': '',
+      'professor': '',
+      'students': [],
+      'units': '',
+      'topStudent': '',
+      'remainingAssignments': '',
     },
   ];
 
   List<Map<String, dynamic>> offeredCourses = [
     {
-      'courseId': 'CS101',
-      'courseName': 'ساختمان داده',
-      'professor': 'وحیدی اصل',
-      'students': ['student1', 'student2'],
-      'units': 3,
-      'topStudent': 'student2',
-      'remainingAssignments': 2,
+      'courseId': '',
+      'courseName': '',
+      'professor': '',
+      'students': [],
+      'units': '',
+      'topStudent': '',
+      'remainingAssignments': '',
     },
   ];
 
@@ -136,6 +127,34 @@ class _ClassesPageState extends State<ClassesPage> {
     }
   }
 
+  Future<void> addClassToServer(String courseId) async {
+    final userdataSession =
+        Provider.of<UserdataSession>(context, listen: false);
+    try {
+      final response = await http.get(Uri.parse(
+          'http://${serverAddress}/addClassData?studentId=${userdataSession.studentId}&courseid=$courseId'));
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        print('JSON Data: $jsonData');
+        print('UI updated with fetched data');
+      } else {
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+      if (e is SocketException) {
+        print('Handling connection reset by peer...');
+        // Optionally, retry the request
+        await Future.delayed(Duration(seconds: 2)); // Delay before retrying
+        await fetchClassData(); // Retry the fetch
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -161,6 +180,9 @@ class _ClassesPageState extends State<ClassesPage> {
             content: Text('کلاس با موفقیت اضافه شد!'),
             backgroundColor: Colors.green,
           ));
+
+          addClassToServer(
+              courseId); // Call the future function to send data to server
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('شما قبلاً در این کلاس ثبت نام کرده‌اید.'),

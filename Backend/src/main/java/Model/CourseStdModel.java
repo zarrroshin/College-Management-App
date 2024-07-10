@@ -1,8 +1,6 @@
 package Model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +24,23 @@ public class CourseStdModel {
         } catch (IOException e) {
             System.out.println("Error!!");
             e.printStackTrace();
+        }
+    }
+
+    public Boolean AddStdCourseToDatabase(String cpr_id, String student_id) {
+        String cstd_id = String.valueOf(Integer.parseInt(std_courses.get(std_courses.size() - 1)[3]) + 1);
+        String text = cpr_id + "," + student_id + "," + "null" + "," + cstd_id;
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true));
+            writer.newLine();
+            writer.write(text);
+            writer.close();
+            return true;
+        } catch (IOException ioe) {
+            System.out.println("Something Went Wrong Please try again!!!");
+            ioe.printStackTrace();
+            return false;
         }
     }
 
